@@ -129,7 +129,7 @@ Npc.prototype.moveToTarget = function (du) {
 
 Npc.prototype.computeSubStep = function (du) {
     if(this._isMoving) return;
-
+	
     if(eatKey(this.KEY_DOWN)) {
         this.move(0);
         return;
@@ -152,29 +152,40 @@ Npc.prototype.computeSubStep = function (du) {
 };
 
 Npc.prototype.move = function (udlr) {
-    this._dir = udlr;
+	
+    
     this._scale = Math.abs(this._scale);
-
+	
     switch(udlr) {
         case 0:
+			if(this._dir != udlr) { break;} 
             if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) return;
             this.targetY += (16 * this._scale);
+			this._isMoving = true;
             break;
         case 1:
+			if(this._dir != udlr) break;
             if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) return;
             this.targetY -= (16 * this._scale);
+			this._isMoving = true;
             break;
         case 2:
+			if(this._dir != udlr) break;
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale))) return;
             this.targetX -= (16 * this._scale);
+			this._isMoving = true;
             break;
         case 3:
+			
             this._scale = -Math.abs(this._scale);
+			if(this._dir != udlr) break;
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, -(8 * this._scale))) return;
             this.targetX -= (16 * this._scale);
+			this._isMoving = true;
             break;
     }
-    this._isMoving = true;
+	this._dir = udlr;
+    
 };
 
 Npc.prototype.moveMult = function (udlr, nr) {
@@ -191,12 +202,15 @@ Npc.prototype.maybeAction = function () {
 };
 
 Npc.prototype.render = function (ctx) {
-    var origScale = this.sprite.scale;
-    var direction;
-    if(this._dir === 3) direction = 2;
-    else direction = this._dir;
-    // pass my scale into the sprite, for drawing
-    this.sprite.scale = this._scale;
-    this.sprite.drawAnimFrame(ctx, this.cx, this.cy, this._spr[direction][this._animFrame].ax, this._spr[direction][this._animFrame].ay, this._width, this._height);
-    this.sprite.scale = origScale;
+	if(this.isVisible) {
+		var origScale = this.sprite.scale;
+		var direction;
+		if(this._dir === 3) direction = 2;
+		else direction = this._dir;
+		// pass my scale into the sprite, for drawing
+		this.sprite.scale = this._scale;
+		
+		this.sprite.drawAnimFrame(ctx, this.cx, this.cy, this._spr[direction][this._animFrame].ax, this._spr[direction][this._animFrame].ay, this._width, this._height);
+		this.sprite.scale = origScale;
+	}
 };

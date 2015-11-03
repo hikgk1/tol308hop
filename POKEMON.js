@@ -99,19 +99,21 @@ function processDiagnostics() {
 // GAME-SPECIFIC RENDERING
 
 function renderSimulation(ctx) {
+	ctx.drawImage(g_images.palletTown,0,0,640,576);
     for(var i = 0; i < g_canvas.width; i += 32) {
         ctx.beginPath();
         ctx.moveTo(i,0);
         ctx.lineTo(i,g_canvas.height);
         ctx.stroke();
     }
-
+	
     for(var i = 0; i < g_canvas.height; i += 32) {
         ctx.beginPath();
         ctx.moveTo(0,i);
         ctx.lineTo(g_canvas.width,i);
         ctx.stroke();
     }
+	
 
     entityManager.render(ctx);
 
@@ -128,7 +130,8 @@ var g_images = {};
 function requestPreloads() {
 
     var requiredImages = {
-        npcSheet   : "./sheets/asheet.png"
+        npcSheet   : "./sheets/asheet.png",
+		palletTown   : "./sheets/pallet_town.png"
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);
