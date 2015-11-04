@@ -29,23 +29,12 @@ var entityManager = {
 step: 0,
 battl: 0,
 move: "",
-_rocks   : [],
-_bullets : [],
-_ships   : [],
-_picachu : [],
-_bShowRocks : false,
+rattata: 0,
+picachu: 0,
 
 // "PRIVATE" METHODS
 
-_generateRocks : function() {
 
-        
-        
-    
-
-
-    // TODO: Make `NUM_ROCKS` Rocks!
-},
 
 
 _forEachOf: function(aCategory, fn) {
@@ -64,140 +53,122 @@ KILL_ME_NOW : -1,
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
 //
-deferredSetup : function () {
-    this._categories = [this._bullets, this._picachu];
-},
+
 
 nextStep: function(){
-        this.step++;
+        this.step++;  //Notum þetta til að rúlla í gegnum hvað á að rendera þar til step=3, þá erum við komin í bardagann sjálfann og notum act function
         if(this.step==3) this.battl=1;
 
 },
 act: function(){
-        if(this.battl==3) { //rattata attacks
-            this._categories[1][0].health -=10*this._categories[1][0].level;
+        if(this.battl==3) { //picachu attacks, bara til að birta myndina
+           
             this.battl=4;
             return;
         }
-        if(this.battl==4){
+        if(this.battl==4){ //rattata attacks
+             this.picachu.health -=10*this.rattata.level;
             this.battl=1
             return;
         }
         if(this.battl==-1){ // bardaga move
-            var pos = this._categories[0][0].getPos()
+            var pos = this.rattata.getPos()  //Sæki pos á pointer til að vita hvaða move er valið
             if(pos==290){
-                this._categories[0][0].health -=10*this._categories[0][0].level;
+                this.rattata.health -=10*this.picachu.level;
                 this.move="Thunder bolt"
             } 
             if(pos==312){
-                this._categories[0][0].health -=15*this._categories[0][0].level;
+                this.rattata.health -=15*this.picachu.level;
                 this.move="Tackle"
 
             }
             if(pos==332){
-                this._categories[1][0].health -=10*this._categories[1][0].level;
+                this.rattata.health -=10*this.picachu.level;
                 this.move="Tail whip"
             }
             if(pos==354){
                 this.move="nothing"
             }
-            this.battl=3;
+            this.battl=3;  //Hoppum í picachu attacks
         } 
         if(this.battl==1){ // menu
-            var pos = this._categories[1][0].getPos()
-            console.log(pos);
-            if(pos[0]==297 && pos[1]==348) this.battl=2 //run
-            if(pos[0]==179 && pos[1]==305) this.battl=-1;
-            if(pos[0]==297 && pos[1]==305) {
+            var pos = this.picachu.getPos()  //Sæki pos á pointer til að vita hvað við ætlum að gera
+
+            if(pos[0]==297 && pos[1]==348) this.battl=2 //run valið
+            if(pos[0]==179 && pos[1]==305) this.battl=-1;  //Fight valið, hoppum í bardaga moves gluggann
+            if(pos[0]==297 && pos[1]==305) {  //PKMN valið
                 console.log("Ekki með í demo");
-                this.battl=1;
+                this.battl=1;  //Höldum áfram í menu
             }
-            if(pos[0]==179 && pos[1]==348) {
+            if(pos[0]==179 && pos[1]==348) {  // ITEM valið
                 console.log("Ekki með í demo");
-                this.battl=1;
+                this.battl=1;  //Höldum áfram í menu
             }
         }
-        console.log(this.battl);
 },
-fireBullet: function(cx, cy, velX, velY, rotation) {
 
-    
-},
-generateShip : function() {
-        this._categories[0].push(new Bullet());
-        this._categories[1].push(new Picachu());
+generatePokemon : function() {
+        this.rattata = new Rattata();
+        this.picachu = new Picachu();
     },
 
 
 update: function(du) {
 
-        this._categories[1][0].update(du);  
-        this._categories[0][0].update(du); 
+        this.picachu.update(du);  //Update picachu
+        this.rattata.update(du);  //Update rattata
 
     // NB: Remember to handle the "KILL_ME_NOW" return value!
     //     and to properly update the array in that case.
 },
 
 render: function(ctx) {
-    if(this.step==0){
+    if(this.step==0){//Teikna upphafsmyndina
         g_sprites.battle1.drawAt(ctx,0,0,400,400)
     g_sprites.battle1.write(ctx,"A wild challanger appears",40,320,20);
     }
-    if(this.step>=1){
+    if(this.step>=1){//Rendera rattata
         g_sprites.battle1.drawAt(ctx,0,0,400,400)
-        this._categories[0][0].render(ctx);
+        this.rattata.render(ctx);
     }
-    if(this.step>=2){
+    if(this.step>=2){//Næsta umhverfi
         g_sprites.battle2.drawAt(ctx,0,0,400,400)
         g_sprites.rattata.write(ctx,"Rattata",28,44,16);
-        this._categories[0][0].render(ctx);
+        this.rattata.render(ctx);
     }
-    if(this.battl==1){
-        this._categories[1][0].render(ctx); 
-        this._categories[0][0].render(ctx);  
+    if(this.battl==1){ //Grunnurinn í bardaganum, erum í menu með battle2 í bakrun, pointerinn er renderaður í gegnum picachu
+        this.picachu.render(ctx); 
+        this.rattata.render(ctx);  
     }
-    if(this.battl==-1){
+    if(this.battl==-1){  //Battle moves, pointerinn er renderaður í gegnum rattata, battle3 er bakrunnurinn í þessu statei
         g_sprites.battle3.drawAt(ctx,0,0,400,400)
         g_sprites.battle3.write(ctx,"Rattata",28,44,16);
         g_sprites.battle3.write(ctx,"Ligthning Bolt",150,310,16);
         g_sprites.battle3.write(ctx,"Tackle",150,332,16);
         g_sprites.battle3.write(ctx,"Tail Whip",150,354,16);
         g_sprites.battle3.write(ctx,"-----------",150,376,16);
-        this._categories[0][0].render(ctx);    
+        this.rattata.render(ctx);    
     }
-    if(this.battl==2){
+    if(this.battl==2){ //Ef valið er run í menu, ekki klárað
         g_sprites.battle4.drawAt(ctx,0,0,400,400)
-        this._categories[0][0].render(ctx); 
+        this.rattata.render(ctx); 
     }
-    if(this.battl==3){
+    if(this.battl==3){//Picachu gerir árás
         g_sprites.rattattack.drawAt(ctx,0,0,400,400)
         g_sprites.rattattack.write(ctx,"Picachu uses "+this.move,40,320,16);
-        this._categories[1][0].render(ctx); 
-        this._categories[0][0].render(ctx); 
+        this.picachu.render(ctx); 
+        this.rattata.render(ctx); 
     }    
-    if(this.battl==4){
+    if(this.battl==4){//Rattata gerir árás
         g_sprites.rattattack.drawAt(ctx,0,0,400,400)
         g_sprites.rattattack.write(ctx,"Rattata uses tackle",40,320,16);
-        this._categories[1][0].render(ctx); 
-        this._categories[0][0].render(ctx); 
+        this.picachu.render(ctx); 
+        this.rattata.render(ctx); 
     }
-    /*for(var i=0;i<this._categories[2].length;i++){
-        this._categories[2][i].render(ctx);  
-    } 
-    for(var k = 0; k < 4; k++){
-        if(this._bShowRocks==true){ this._categories[0][k].render(ctx); 
-        }
-    }   
-    for(var j = 0; j<this._categories[1].length; j++) {
-    if(this._categories[1][j]) this._categories[1][j].render(ctx);
-    }
-    // TODO: Implement this
-    // NB: Remember to implement the ._bShowRocks toggle!
-    // (Either here, or if you prefer, in the Rock objects)
-*/
+
 }
 
 }
 
 // Some deferred setup which needs the object to have been created first
-entityManager.deferredSetup();
+

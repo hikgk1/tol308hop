@@ -10,12 +10,12 @@ Many of...
 
 INSTRUCTIONS:
 
-You need to flesh out the "Bullet.js" and "Rock.js" files,
+You need to flesh out the "Rattata.js" and "Rock.js" files,
 and update the "entityManager.js" module to manage them.
 
-I've updated "Ship.js" so that it knows how to request bullet
+I've updated "Ship.js" so that it knows how to request Rattata
 creation, so you don't have to worry about that side of it,
-but you will have to implement the `fireBullet` function in
+but you will have to implement the `fireRattata` function in
 the entityManager.
 
 I've also implemented all the necessary new keys e.g. "1" to
@@ -46,7 +46,7 @@ var g_ctx = g_canvas.getContext("2d");
 // CREATE INITIAL SHIPS
 // ====================
 
-entityManager.generateShip();
+entityManager.generatePokemon();  //Bý til picachu og rattata  
 
 
 // =============
@@ -80,7 +80,7 @@ function updateSimulation(du) {
     entityManager.update(du);
 
     // Prevent perpetual firing!
-    eatKey(Bullet.prototype.KEY_FIRE);
+    eatKey(Rattata.prototype.KEY_FIRE);
 }
 
 // GAME-SPECIFIC DIAGNOSTICS
@@ -183,10 +183,10 @@ function preloadDone() {
     g_sprites.battle4 = new Sprite(g_images.battle4);
     g_sprites.pointer = new Sprite(g_images.pointer);
     g_sprites.rattattack = new Sprite(g_images.rattattack);
-    main.init();
+    main.init();  // Þegar að búið er að hlaða öllum myndum þá byrjar þetta
 }
 
 
 
 // Kick it off
-requestPreloads();
+requestPreloads();  // Byrjar hér, byrja á því að loada öllum myndum
