@@ -35,6 +35,7 @@ need to tweak it if you do something "non-obvious" in yours.
 
 var g_canvas = document.getElementById("myCanvas");
 var g_ctx = g_canvas.getContext("2d");
+var g_inBattle = false;
 
 /*
 0        1         2         3         4         5         6         7         8
@@ -69,7 +70,12 @@ function updateSimulation(du) {
     
     processDiagnostics();
     
-    entityManager.update(du);
+    if(!g_inBattle) {
+        entityManager.update(du);
+    } else {
+        entityManager.battleUpdate(du);
+        eatKey(Rattata.prototype.KEY_FIRE);
+    }
 }
 
 // GAME-SPECIFIC DIAGNOSTICS
@@ -99,31 +105,34 @@ function processDiagnostics() {
 // GAME-SPECIFIC RENDERING
 
 function renderSimulation(ctx) {
-	ctx.save();
-	
-	ctx.translate(304-entityManager._npcs[0].cx,272-entityManager._npcs[0].cy)
-	ctx.drawImage(g_images.route1,0,-1152);
-	ctx.drawImage(g_images.palletTown,-96,-96);
-	
-   /* for(var i = 0; i < g_canvas.width; i += 32) {
-        ctx.beginPath();
-        ctx.moveTo(i,0);
-        ctx.lineTo(i,g_canvas.height);
-        ctx.stroke();
-    }
-	
-    for(var i = 0; i < g_canvas.height; i += 32) {
-        ctx.beginPath();
-        ctx.moveTo(0,i);
-        ctx.lineTo(g_canvas.width,i);
-        ctx.stroke();
-    }
-	*/
-	
-    entityManager.render(ctx);
+	if(!g_inBattle) {
+        ctx.save();
 
-    if (g_renderSpatialDebug) spatialManager.render(ctx);
-	ctx.restore();
+        ctx.translate(304-entityManager._npcs[0].cx,272-entityManager._npcs[0].cy)
+        ctx.drawImage(g_images.route1,0,-1152);
+        ctx.drawImage(g_images.palletTown,-96,-96);
+
+        /* for(var i = 0; i < g_canvas.width; i += 32) {
+            ctx.beginPath();
+            ctx.moveTo(i,0);
+            ctx.lineTo(i,g_canvas.height);
+            ctx.stroke();
+            }
+
+        for(var i = 0; i < g_canvas.height; i += 32) {
+            ctx.beginPath();
+            ctx.moveTo(0,i);
+            ctx.lineTo(g_canvas.width,i);
+            ctx.stroke();
+        }*/
+
+        entityManager.render(ctx);
+
+        if (g_renderSpatialDebug) spatialManager.render(ctx);
+        ctx.restore();
+    } else {
+        entityManager.battleRender(ctx);
+    }
 }
 
 
@@ -138,7 +147,15 @@ function requestPreloads() {
     var requiredImages = {
         npcSheet   : "./sheets/asheet.png",
 		palletTown   : "./sheets/pallet_town.png",
-		route1   : "./sheets/route1test.png"
+		route1   : "./sheets/route1test.png",
+        battle1: "./sheets/Battle1.png",
+        rat: "./sheets/rat.png",
+        battle2: "./sheets/Battle2.png",
+        pica: "./sheets/Pica.png",
+        battle3: "./sheets/Battle3.png",
+        battle4: "./sheets/Battle4.png",
+        pointer: "./sheets/Pointer.png",
+        rattattack: "./sheets/ratattack.png"
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);
@@ -149,6 +166,14 @@ var g_sprites = {};
 function preloadDone() {
 
     g_sprites.npcs  = new Sprite(g_images.npcSheet);
+    g_sprites.battle1 = new Sprite(g_images.battle1);
+    g_sprites.battle2 = new Sprite(g_images.battle2);
+    g_sprites.rattata = new Sprite(g_images.rat);
+    g_sprites.picachu = new Sprite(g_images.pica);
+    g_sprites.battle3 = new Sprite(g_images.battle3);
+    g_sprites.battle4 = new Sprite(g_images.battle4);
+    g_sprites.pointer = new Sprite(g_images.pointer);
+    g_sprites.rattattack = new Sprite(g_images.rattattack);
 
     entityManager.init();
 

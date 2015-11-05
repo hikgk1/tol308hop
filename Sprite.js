@@ -27,6 +27,19 @@ Sprite.prototype.drawAt = function (ctx, x, y) {
                   x, y);
 };
 
+Sprite.prototype.drawAtSize = function (ctx, x, y,z,w) {
+    ctx.drawImage(this.image, 
+                  x, y,z,w);
+};
+
+Sprite.prototype.write = function (ctx,w,x,y,z){
+    ctx.save();
+    ctx.font = " bold "+z+"px 'Arial'";
+    ctx.fillStyle = "black";
+    ctx.fillText(w, x, y);
+    ctx.restore();
+};
+
 Sprite.prototype.drawCentredAt = function (ctx, cx, cy, rotation) {
     if (rotation === undefined) rotation = 0;
     

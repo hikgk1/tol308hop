@@ -20,8 +20,8 @@ Picachu.prototype.KEY_D  = 'D'.charCodeAt(0);
 Picachu.prototype.health = 100;
 Picachu.prototype.level = 1;
 
-var x = [179,297];
-var y = [305,348];
+var x = [g_canvas.width*0.4475,g_canvas.width*0.7425];
+var y = [g_canvas.height*0.7625,g_canvas.height*0.87];
 var j = 0; // x-hnit
 var i = 0; // y-hnit
 
@@ -56,9 +56,9 @@ Picachu.prototype.getPos = function(){  //nota til að velja með pointer
 }
 
 Picachu.prototype.render = function (ctx) {
-	util.fillBox(ctx, 236, 208, this.health*1.25, 10, "black");  //health bar hjá picachu
-	g_sprites.picachu.write(ctx,"Picachu",217,197,16);      
-    g_sprites.picachu.drawAt(ctx,45,150,100,100);       //Rendera picachu
-     if(entityManager.battl==1) g_sprites.pointer.drawAt(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
+	util.fillBox(ctx, g_canvas.width*0.59 ,g_canvas.height*0.52, this.health*2, 10, "black");  //health bar hjá picachu
+	g_sprites.picachu.write(ctx,"Picachu",g_canvas.width*0.5425,g_canvas.height*0.4925,16);      
+    g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Rendera picachu
+     if(entityManager.battl==1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
 
 };

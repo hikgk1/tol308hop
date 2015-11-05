@@ -153,7 +153,7 @@ Npc.prototype.computeSubStep = function (du) {
 
 Npc.prototype.move = function (udlr) {
 	
-    console.log((this.cx-16)/32,(-this.cy+560)/32);
+    //console.log((this.cx-16)/32,(-this.cy+560)/32);
     this._scale = Math.abs(this._scale);
 	
     switch(udlr) {
