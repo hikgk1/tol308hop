@@ -153,25 +153,28 @@ Npc.prototype.computeSubStep = function (du) {
 
 Npc.prototype.move = function (udlr) {
 	
-    
+    console.log((this.cx-16)/32,(-this.cy+560)/32);
     this._scale = Math.abs(this._scale);
 	
     switch(udlr) {
         case 0:
 			if(this._dir != udlr) { break;} 
-            if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) return;
+            if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) { return;}
+			if(spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale)) == 1) { return;}
             this.targetY += (16 * this._scale);
 			this._isMoving = true;
             break;
         case 1:
 			if(this._dir != udlr) break;
             if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) return;
+			if(spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale)) == 1) { return;}
             this.targetY -= (16 * this._scale);
 			this._isMoving = true;
             break;
         case 2:
 			if(this._dir != udlr) break;
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale))) return;
+			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 1) { return;}
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -180,6 +183,7 @@ Npc.prototype.move = function (udlr) {
             this._scale = -Math.abs(this._scale);
 			if(this._dir != udlr) break;
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, -(8 * this._scale))) return;
+			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 1) { return;}
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;

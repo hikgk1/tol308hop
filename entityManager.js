@@ -76,9 +76,9 @@ deferredSetup : function () {
 },
 
 init: function() {
-    entityManager.displayNpc(this.npcList.mainChar, 208, 208, true,true);
+    entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,true);
     entityManager.displayNpc(this.npcList.npc1, 208, 240, false,true);
-	entityManager.fillObsticles();
+	spatialManager.manageWallsAndGrass();
     //this.moveNpc(1, 0);
 },
 
@@ -148,72 +148,9 @@ render: function(ctx) {
         }
         debugY += 10;
     }
-},
-
-fillObsticles: function() {
-	//right wall
-	for(var i = 0; i < 19; i++ ) {
-		this.displayNpc(this.npcList.object1, 16, 16+i*32, false,false);
-	}
-	//water
-	for(var i = 0; i < 4; i++ ) {
-		for(var j = 0; j < 5; j++ ) {
-			this.displayNpc(this.npcList.object1, 144+i*32, 432+j*32, false,false);
-		}
-	}
-	//house 1
-	this.displayNpc(this.npcList.object1, 16+3*32, 16+4*32, false,false);
-	for(var i = 0; i < 4; i++ ) {
-		for(var j = 0; j < 3; j++ ) {
-			this.displayNpc(this.npcList.object1, 16+4*32+i*32, 16+2*32+j*32, false,false);
-		}
-	}
-	//house 2
-	this.displayNpc(this.npcList.object1, 16+11*32, 16+4*32, false,false);
-	for(var i = 0; i < 4; i++ ) {
-		for(var j = 0; j < 3; j++ ) {
-			this.displayNpc(this.npcList.object1, 16+12*32+i*32, 16+2*32+j*32, false,false);
-		}
-	}
-	//top wall
-	for(var i = 0; i < 9; i++ ) {
-		this.displayNpc(this.npcList.object1, 16+32+i*32, 16, false,false);
-	}
-	for(var i = 11; i < 19; i++ ) {
-		this.displayNpc(this.npcList.object1, 16+32+i*32, 16, false,false);
-	}
-	//left wall
-	for(var i = 0; i < 19; i++ ) {
-		this.displayNpc(this.npcList.object1, 16+19*32, 16+i*32, false,false);
-	}
-	// bottom wall
-	this.displayNpc(this.npcList.object1, 16+1*32, 16+16*32, false,false);
-	for(var i = 0; i < 3; i++ ) {
-		this.displayNpc(this.npcList.object1, 16+32+i*32, 16+17*32, false,false);
-	}
-	for(var i = 0; i < 11; i++ ) {
-		for(var j = 0; j < 2; j++ ) {
-			this.displayNpc(this.npcList.object1, 16+8*32+i*32, 16+16*32+j*32, false,false);
-		}
-	}
-	//fence 1
-	for(var i = 0; i < 4; i++ ) {
-		this.displayNpc(this.npcList.object1, 16+4*32+i*32, 16+8*32, false,false);
-	}
-	//fence 2
-	for(var i = 0; i < 6; i++ ) {
-		this.displayNpc(this.npcList.object1, 16+10*32+i*32, 16+12*32, false,false);
-	}
-	//PokeLab
-	for(var i = 0; i < 6; i++ ) {
-		for(var j = 0; j < 4; j++ ) {
-			this.displayNpc(this.npcList.object1, 16+10*32+i*32, 16+7*32+j*32, false,false);
-		}
-	}
-	
-	
-	
 }
+
+
 
 }
 

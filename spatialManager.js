@@ -23,10 +23,13 @@ var spatialManager = {
 _nextSpatialID : 1, // make all valid IDs non-falsey (i.e. don't start at 0)
 
 _entities : [],
+// walls, grass
+_nonentities : [],
 
 // "PRIVATE" METHODS
 
 // PUBLIC METHODS
+
 
 getNewSpatialID : function() {
 
@@ -61,7 +64,15 @@ findEntityInRange: function(posX, posY, radius) {
             return e.obj;
         }
     }
+	
+	
 
+},
+
+findNonEntityInRange: function(posX,posY) {
+	
+	var result = this._nonentities[(posX-16)/32][((-1*posY)+560)/32];
+	return result;
 },
 
 render: function(ctx) {
@@ -73,6 +84,11 @@ render: function(ctx) {
         util.strokeCircle(ctx, e.posX, e.posY, e.radius);
     }
     ctx.strokeStyle = oldStyle;
+},
+
+manageWallsAndGrass : function() {
+
+	fillCollisionMatrix(this);
 }
 
 }
