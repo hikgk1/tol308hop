@@ -70,7 +70,7 @@ findEntityInRange: function(posX, posY, radius) {
 },
 
 findNonEntityInRange: function(posX,posY) {
-	
+	if(this._nonentities[(posX-16)/32] === undefined) return;
 	var result = this._nonentities[(posX-16)/32][((-1*posY)+560)/32];
 	return result;
 },
@@ -82,6 +82,16 @@ render: function(ctx) {
     for (var ID in this._entities) {
         var e = this._entities[ID];
         util.strokeCircle(ctx, e.posX, e.posY, e.radius);
+    }
+
+    for (var i = 0; i < this._nonentities.length; i++) {
+        for (var j = 0; j < this._nonentities[i].length; j++) {
+            if(this._nonentities[i][j] === 1) {
+                util.fillBox(ctx, i*32, -(j*32)+544, 32, 32, "rgba(255, 0, 0, 0.5)");
+            } else if (this._nonentities[i][j] === 2) {
+                util.fillBox(ctx, i*32, -(j*32)+544, 32, 32, "rgba(0, 255, 0, 0.5)");
+            }
+        }
     }
     ctx.strokeStyle = oldStyle;
 },

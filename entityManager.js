@@ -79,7 +79,6 @@ init: function() {
     entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,true);
     entityManager.displayNpc(this.npcList.npc1, 208, 240, false,true);
 	spatialManager.manageWallsAndGrass();
-    //this.moveNpc(1, 0);
 },
 
 displayNpc : function (spArr, cx, cy, mainChar,visible) {

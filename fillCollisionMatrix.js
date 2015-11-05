@@ -86,4 +86,75 @@ function fillCollisionMatrix(x){
 			
 		}
 	}
+
+	//Route 1 left wall and right wall
+	for (var i = 22; i < 53; i++) {
+		x._nonentities[3][i] = 1;
+		x._nonentities[18][i] = 1;
+	}
+
+	//Route 1 sign
+	x._nonentities[9][26] = 1;
+
+	//Route 1 walls
+	for (var i = 4; i < 12; i++) {
+		x._nonentities[i][30] = 1;
+	}
+	for (var i = 4; i < 6; i++) {
+		x._nonentities[i][40] = 1;
+	}
+	for (var i = 10; i < 14; i++) {
+		x._nonentities[i][40] = 1;
+	}
+	for (var i = 44; i < 50; i++) {
+		x._nonentities[9][i] = 1;
+	}
+	for (var i = 4; i < 10; i++) {
+		x._nonentities[i][52] = 1;
+	}
+	for (var i = 12; i < 18; i++) {
+		x._nonentities[i][52] = 1;
+	}
+
+	//Route 1 grass fields
+	for (var i = 10; i < 12; i++) {
+		for (var j = 17; j < 22; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 4; i < 8; i++) {
+		for (var j = 22; j < 24; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 6; i < 10; i++) {
+		for (var j = 24; j < 26; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 12; i < 16; i++) {
+		for (var j = 22; j < 24; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 14; i < 18; i++) {
+		for (var j = 24; j < 26; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 12; i < 16; i++) {
+		for (var j = 28; j < 32; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 14; i < 18; i++) {
+		for (var j = 38; j < 42; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
+	for (var i = 10; i < 18; i++) {
+		for (var j = 44; j < 48; j++) {
+			x._nonentities[i][j] = 2;
+		}
+	}
 }
