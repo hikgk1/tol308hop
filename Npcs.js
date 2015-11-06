@@ -237,7 +237,6 @@ Npc.prototype.render = function (ctx) {
 		else direction = this._dir;
 		// pass my scale into the sprite, for drawing
 		this.sprite.scale = this._scale;
-		
 		this.sprite.drawAnimFrame(ctx, this.cx, this.cy, this._spr[direction][this._animFrame].ax, this._spr[direction][this._animFrame].ay, this._width, this._height);
 		this.sprite.scale = origScale;
 	}

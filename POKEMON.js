@@ -155,7 +155,8 @@ function requestPreloads() {
         battle3: "./sheets/Battle3.png",
         battle4: "./sheets/Battle4.png",
         pointer: "./sheets/Pointer.png",
-        rattattack: "./sheets/ratattack.png"
+        rattattack: "./sheets/ratattack.png",
+        font: "./sheets/font.png"
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);
@@ -174,6 +175,7 @@ function preloadDone() {
     g_sprites.battle4 = new Sprite(g_images.battle4);
     g_sprites.pointer = new Sprite(g_images.pointer);
     g_sprites.rattattack = new Sprite(g_images.rattattack);
+    g_sprites.font = new Sprite(g_images.font);
 
     entityManager.init();
 

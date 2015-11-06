@@ -101,6 +101,15 @@ fillBox: function (ctx, x, y, w, h, style) {
     ctx.fillStyle = style;
     ctx.fillRect(x, y, w, h);
     ctx.fillStyle = oldStyle;
+},
+
+writeText: function (ctx, w, x, y, scale) {
+    for (var i = 0; i < w.length; i++) {
+        var p = w.charAt(i);
+        var tmp = g_font[p.charCodeAt(0)];
+        ctx.drawImage(g_sprites.font.image, tmp[0], tmp[1], 8, 8, x, y, 8*scale, 8*scale);
+        x += 8*scale;
+    }
 }
 
 };

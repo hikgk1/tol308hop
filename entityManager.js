@@ -182,7 +182,8 @@ battleUpdate: function(du) {
 battleRender: function(ctx) {
     if(this.step===0){//Teikna upphafsmyndina
         g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-    g_sprites.battle1.write(ctx,"A wild challanger appears",g_canvas.width*0.1,g_canvas.height*0.8,20);
+    //g_sprites.battle1.write(ctx,"A wild challanger appears",g_canvas.width*0.1,g_canvas.height*0.8,20);
+    util.writeText(ctx, "A wild challanger appeared", g_canvas.width*0.1,g_canvas.height*0.8, 2);
     }
     if(this.step>=1){//Rendera rattata
         g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
@@ -190,7 +191,8 @@ battleRender: function(ctx) {
     }
     if(this.step>=2){//Næsta umhverfi
         g_sprites.battle2.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        g_sprites.rattata.write(ctx,"Rattata",g_canvas.width*0.07,g_canvas.height*0.11,16);
+        //g_sprites.rattata.write(ctx,"Rattata",g_canvas.width*0.07,g_canvas.height*0.11,16);
+        util.writeText(ctx, "Rattata", g_canvas.width*0.07,g_canvas.height*0.09, 1.5)
         this.rattata.render(ctx);
     }
     if(this.battl===1){ //Grunnurinn í bardaganum, erum í menu með battle2 í bakrun, pointerinn er renderaður í gegnum picachu
