@@ -157,4 +157,39 @@ function fillCollisionMatrix(x){
 			x._nonentities[i][j] = 2;
 		}
 	}
+
+	//Route 1 jump ledges
+	for (var i = 4; i < 6; i++) {
+		x._nonentities[i][26] = 3;
+	}
+	for (var i = 10; i < 18; i++) {
+		x._nonentities[i][26] = 3;
+	}
+	for (var i = 16; i < 18; i++) {
+		x._nonentities[i][30] = 3;
+	}
+	x._nonentities[4][34] = 3;
+	for (var i = 6; i < 9; i++) {
+		x._nonentities[i][34] = 3;
+	}
+	for (var i = 10; i < 18; i++) {
+		x._nonentities[i][34] = 3;
+	}
+	for (var i = 4; i < 6; i++) {
+		x._nonentities[i][26] = 3;
+	}
+	for (var i = 6; i < 10; i++) {
+		x._nonentities[i][40] = 3;
+	}
+	for (var i = 4; i < 9; i++) {
+		x._nonentities[i][44] = 3;
+	}
+	for (var i = 4; i < 9; i++) {
+		x._nonentities[i][48] = 3;
+	}
+	for (var i = 10; i < 14; i++) {
+		x._nonentities[i][48] = 3;
+	}
+	
+
 }

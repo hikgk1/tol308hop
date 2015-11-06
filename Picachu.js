@@ -35,7 +35,7 @@ Picachu.prototype.update = function (du) {
     if (eatKey(this.KEY_W)) {
         i=0;
         p-=1;
-        if(p==-1) p=3;
+        if(p===-1) p=3;
     }
     if (eatKey(this.KEY_D)) {
         j=1;       
@@ -43,7 +43,7 @@ Picachu.prototype.update = function (du) {
     if (eatKey(this.KEY_S)) {
         i=1;    
         p+=1;
-        if(p==4) p=0; 
+        if(p===4) p=0; 
     }    
 
 };
@@ -59,6 +59,6 @@ Picachu.prototype.render = function (ctx) {
 	util.fillBox(ctx, g_canvas.width*0.59 ,g_canvas.height*0.52, this.health*2, 10, "black");  //health bar hjá picachu
 	g_sprites.picachu.write(ctx,"Picachu",g_canvas.width*0.5425,g_canvas.height*0.4925,16);      
     g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Rendera picachu
-     if(entityManager.battl==1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
+     if(entityManager.battl===1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
 
 };

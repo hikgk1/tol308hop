@@ -76,12 +76,15 @@ findNonEntityInRange: function(posX,posY) {
 },
 
 render: function(ctx) {
-    var oldStyle = ctx.strokeStyle;
+    ctx.save();
     ctx.strokeStyle = "red";
+    ctx.fillStyle = "red";
+    ctx.font = "bold 20px 'Arial'";
     
     for (var ID in this._entities) {
         var e = this._entities[ID];
         util.strokeCircle(ctx, e.posX, e.posY, e.radius);
+        ctx.fillText(ID-1, e.posX-6, e.posY+8);
     }
 
     for (var i = 0; i < this._nonentities.length; i++) {
@@ -90,10 +93,12 @@ render: function(ctx) {
                 util.fillBox(ctx, i*32, -(j*32)+544, 32, 32, "rgba(255, 0, 0, 0.5)");
             } else if (this._nonentities[i][j] === 2) {
                 util.fillBox(ctx, i*32, -(j*32)+544, 32, 32, "rgba(0, 255, 0, 0.5)");
+            } else if (this._nonentities[i][j] === 3) {
+                util.fillBox(ctx, i*32, -(j*32)+544, 32, 32, "rgba(255, 0, 255, 0.5)");
             }
         }
     }
-    ctx.strokeStyle = oldStyle;
+    ctx.restore();
 },
 
 manageWallsAndGrass : function() {

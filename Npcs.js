@@ -32,6 +32,7 @@ function Npc(descr) {
 
     this._animFrame = 0;
     this._isMoving = false;
+    this._isJumping = false;
     this._stepsRemain = 0;
     this._oneTileTime = 0.4;
     this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
@@ -40,6 +41,8 @@ function Npc(descr) {
     this.oldY = this.cy;
     this.targetX = this.cx;
     this.targetY = this.cy;
+    this.tmpX = this.cx;
+    this.tmpY = this.cy;
 };
 
 Npc.prototype = new Entity();
@@ -68,6 +71,11 @@ Npc.prototype.update = function (du) {
         this.moveToTarget(du);
     }
 
+    if(spatialManager.findNonEntityInRange(this.cx, this.cy) === 3) {
+        this.move(0);
+        this._isJumping = true;
+    }
+
     // Perform movement substeps
     //var steps = this.numSubSteps;
     //var dStep = du / steps;
@@ -93,7 +101,7 @@ Npc.prototype.update = function (du) {
 
 Npc.prototype.setScale = function (scale) {
     this._scale = scale;
-}
+};
 
 Npc.prototype.moveToTarget = function (du) {
     var ratio = du / (this._oneTileTime * SECS_TO_NOMINALS);
@@ -112,8 +120,16 @@ Npc.prototype.moveToTarget = function (du) {
         this._animFrame = 1;
     }
 
-    this.cx += (this.targetX-this.oldX)*ratio;
-    this.cy += (this.targetY-this.oldY)*ratio;
+    this.tmpX += (this.targetX-this.oldX)*ratio;
+    this.tmpY += (this.targetY-this.oldY)*ratio;
+
+    if(!this._isJumping) {
+        this.cx = this.tmpX;
+        this.cy = this.tmpY;
+    } else {
+        this.cx = this.tmpX;
+        this.cy = this.targetY - (-0.095*util.square(((this.targetY-this.tmpY)-20.5)) + 40);
+    }
 
     this._animTimer -= du;
     if(this._animTimer < 0) {
@@ -121,11 +137,14 @@ Npc.prototype.moveToTarget = function (du) {
         this.cy = this.targetY;
         this.oldX = this.cx;
         this.oldY = this.cy;
+        this.tmpX = this.cx;
+        this.tmpY = this.cy;
         this._isMoving = false;
+        this._isJumping = false;
         this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
         this._animFrame = 0;
     }
-}
+};
 
 Npc.prototype.computeSubStep = function (du) {
     if(this._isMoving) return;
@@ -158,32 +177,37 @@ Npc.prototype.move = function (udlr) {
 	
     switch(udlr) {
         case 0:
-			if(this._dir != udlr) { break;} 
+			if(this._dir !== udlr) { break;} 
             if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) { return;}
-			if(spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale)) == 1) { return;}
+			var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale));
+            if(inWay === 1) { return;}
             this.targetY += (16 * this._scale);
 			this._isMoving = true;
             break;
         case 1:
-			if(this._dir != udlr) break;
+			if(this._dir !== udlr) break;
             if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) return;
-			if(spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale)) == 1) { return;}
+            var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale));
+			if(inWay === 1 || inWay === 3) { return;}
             this.targetY -= (16 * this._scale);
 			this._isMoving = true;
             break;
         case 2:
-			if(this._dir != udlr) break;
+			if(this._dir !== udlr) break;
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale))) return;
-			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 1) { return;}
+            var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
+			if(inWay === 1 || inWay === 3) { return;}
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
         case 3:
 			
             this._scale = -Math.abs(this._scale);
-			if(this._dir != udlr) break;
+			if(this._dir !== udlr) break;
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, -(8 * this._scale))) return;
-			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 1) { return;}
+            var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
+			if(inWay === 1 || inWay === 3) { return;}
+            else if(inWay === 3) { return;}
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -195,7 +219,7 @@ Npc.prototype.move = function (udlr) {
 Npc.prototype.moveMult = function (udlr, nr) {
     this._dir = udlr;
     this._stepsRemain = nr;
-}
+};
 
 Npc.prototype.maybeAction = function () {
 
