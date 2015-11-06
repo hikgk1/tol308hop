@@ -43,6 +43,8 @@ function Npc(descr) {
     this.targetY = this.cy;
     this.tmpX = this.cx;
     this.tmpY = this.cy;
+	
+	this.prevGrass = false;
 };
 
 Npc.prototype = new Entity();
@@ -143,6 +145,25 @@ Npc.prototype.moveToTarget = function (du) {
         this._isJumping = false;
         this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
         this._animFrame = 0;
+		//Transfer from inside and outside of Pokelab
+		if(this._dir == 1) {
+			if((this.cx-16)/32 == 12 && (-this.cy+560)/32 == 7 ){
+				this._isMoving = false;
+				this.oldX=1360;
+				this.tmpX=1360;
+				this.cx = 1360;
+				this.targetX = 1360;
+			}
+		}
+		if(this._dir == 0) {
+			if(((this.cx-16)/32 == 42 || (this.cx-16)/32 == 43) && (-this.cy+560)/32 == 6  ){
+				this._isMoving = false;
+				this.oldX=400;
+				this.tmpX=400;
+				this.cx = 400;
+				this.targetX = 400;
+			}
+		}
     }
 };
 
@@ -174,40 +195,74 @@ Npc.prototype.move = function (udlr) {
 	
     //console.log((this.cx-16)/32,(-this.cy+560)/32);
     this._scale = Math.abs(this._scale);
-	
+	this.prevGrass = this.inGrass;
+	this.inGrass = false;
     switch(udlr) {
         case 0:
-			if(this._dir !== udlr) { break;} 
+			if(this._dir != udlr) { 
+			//for grass animation
+			if(spatialManager._nonentities[(this.cx-16)/32][(-this.cy+560)/32] == 2) {
+				this.inGrass = true;
+			}
+			break;
+			} 
             if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) { return;}
 			var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale));
             if(inWay === 1) { return;}
+			//for grass animation
+			if(spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale)) == 2) { this.inGrass = true;}
             this.targetY += (16 * this._scale);
 			this._isMoving = true;
             break;
         case 1:
-			if(this._dir !== udlr) break;
+			if(this._dir != udlr) { 
+				//for grass animation
+				if(spatialManager._nonentities[(this.cx-16)/32][(-this.cy+560)/32] == 2) {
+					this.inGrass = true;
+				}
+				break;
+			} 
             if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale));
 			if(inWay === 1 || inWay === 3) { return;}
+			//for grass animation
+			if(spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale)) == 2) { this.inGrass = true;}
             this.targetY -= (16 * this._scale);
 			this._isMoving = true;
             break;
         case 2:
-			if(this._dir !== udlr) break;
+			if(this._dir != udlr) { 
+				//for grass animation
+				if(spatialManager._nonentities[(this.cx-16)/32][(-this.cy+560)/32] == 2) {
+					this.inGrass = true;
+				}
+				break;
+			} 
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
 			if(inWay === 1 || inWay === 3) { return;}
+			//for grass animation
+			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 2) { this.inGrass = true;}
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
         case 3:
 			
             this._scale = -Math.abs(this._scale);
-			if(this._dir !== udlr) break;
+			
+			if(this._dir != udlr) { 
+				//for grass animation
+				if(spatialManager._nonentities[(this.cx-16)/32][(-this.cy+560)/32] == 2) {
+					this.inGrass = true;
+				}
+				break;
+			} 
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, -(8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
 			if(inWay === 1 || inWay === 3) { return;}
             else if(inWay === 3) { return;}
+			//for grass animation
+			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 2) { this.inGrass = true;}
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -230,7 +285,7 @@ Npc.prototype.maybeAction = function () {
 };
 
 Npc.prototype.render = function (ctx) {
-	if(this.isVisible) {
+	
 		var origScale = this.sprite.scale;
 		var direction;
 		if(this._dir === 3) direction = 2;
@@ -239,5 +294,11 @@ Npc.prototype.render = function (ctx) {
 		this.sprite.scale = this._scale;
 		this.sprite.drawAnimFrame(ctx, this.cx, this.cy, this._spr[direction][this._animFrame].ax, this._spr[direction][this._animFrame].ay, this._width, this._height);
 		this.sprite.scale = origScale;
-	}
+		
+		if (this.inGrass) {
+			
+			ctx.drawImage(g_images.grasspatch,this.targetX-16,this.targetY-16);
+			if(this.prevGrass) {  ctx.drawImage(g_images.grasspatch,this.oldX-16,this.oldY-16);}
+			
+		}
 };

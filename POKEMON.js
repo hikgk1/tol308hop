@@ -110,7 +110,8 @@ function renderSimulation(ctx) {
 
         ctx.translate(304-entityManager._npcs[0].cx,272-entityManager._npcs[0].cy)
         ctx.drawImage(g_images.route1,0,-1152);
-        ctx.drawImage(g_images.palletTown,-96,-96);
+        ctx.drawImage(g_images.palletTown,-288,-96);
+		ctx.drawImage(g_images.pokelab,896,-416)
 
         /* for(var i = 0; i < g_canvas.width; i += 32) {
             ctx.beginPath();
@@ -156,7 +157,9 @@ function requestPreloads() {
         battle4: "./sheets/Battle4.png",
         pointer: "./sheets/Pointer.png",
         rattattack: "./sheets/ratattack.png",
-        font: "./sheets/font.png"
+        font: "./sheets/font.png",
+		grasspatch: "./sheets/grasspatch.png",
+		pokelab: "./sheets/pokelab.png"
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);

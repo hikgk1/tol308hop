@@ -81,22 +81,22 @@ deferredSetup : function () {
 },
 
 init: function() {
-    entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,true);
-    entityManager.displayNpc(this.npcList.npc1, 208, 240, false,true);
-    entityManager.displayNpc(this.npcList.npc1, 176, -336, false,true);
+    entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,false);
+    entityManager.displayNpc(this.npcList.npc1, 208, 240, false,false);
+    entityManager.displayNpc(this.npcList.npc1, 176, -336, false,false);
     entityManager.displayNpc(this.npcList.npc1, 496, -720, false,true);
     entityManager.moveMultNpc(3, 2, 0);
 	spatialManager.manageWallsAndGrass();
     this.generatePokemon();
 },
 
-displayNpc : function (spArr, cx, cy, mainChar,visible) {
+displayNpc : function (spArr, cx, cy, mainChar,inGrass) {
     this._npcs.push(new Npc({
         _spr : spArr,
         _width : 16,
         _height : 16,
         isMainChar : mainChar,
-		isVisible : visible,
+		inGrass : inGrass,
         cx : cx,
         cy : cy
     }));

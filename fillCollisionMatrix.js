@@ -6,12 +6,12 @@
 //Assign each spot with 0 for passable, 1 for obsticle, 2 for grass
 
 function fillCollisionMatrix(x){
-	for (var i = 0; i <20; i++) {
+	for (var i = 0; i <50; i++) {
 		x._nonentities[i] = [];
 	}
 	
 	//set all values of matrix as 0 first	
-	for (var i = 0; i <20; i++) {
+	for (var i = 0; i <50; i++) {
 		for (var j = 0; j<55;j++) {
 			x._nonentities[i][j] = 0;
 			
@@ -63,6 +63,9 @@ function fillCollisionMatrix(x){
 			
 		}
 	}
+	x._nonentities[12][7] = 0;
+	insidePokeLab(x);
+	
 	//PalletTown  fences
 	
 	for (var i = 4; i < 8; i++) {
@@ -192,4 +195,47 @@ function fillCollisionMatrix(x){
 	}
 	
 
+}
+function insidePokeLab(x){
+	
+	
+	for (var j = 7; j<17;j++) {
+		x._nonentities[37][j] = 1;
+	}
+	for (var j = 7; j<18;j++) {
+		x._nonentities[48][j] = 1;
+	}
+	for (var i = 38; i < 48; i++) {
+		for (var j = 17; j<19;j++) {
+			x._nonentities[i][j] = 1;
+			
+		}
+	}
+	x._nonentities[43][17] = 0;
+	x._nonentities[42][17] = 0;
+	
+	
+	for (var i = 38; i<48;i++) {
+		x._nonentities[i][6] = 1;
+	}
+	x._nonentities[43][6] = 0;
+	x._nonentities[42][6] = 0;
+	
+	for (var i = 38; i < 42; i++) {
+		for (var j = 11; j<13;j++) {
+			x._nonentities[i][j] = 1;
+			
+		}
+	}
+	
+	for (var i = 44; i < 48; i++) {
+		for (var j = 11; j<13;j++) {
+			x._nonentities[i][j] = 1;
+			
+		}
+	}
+	
+	for (var i = 44; i<47;i++) {
+		x._nonentities[i][15] = 1;
+	}
 }
