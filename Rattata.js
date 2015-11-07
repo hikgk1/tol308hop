@@ -45,10 +45,14 @@ Rattata.prototype.render = function (ctx) {
     if(entityManager.battl==-1){   // battl=-1 þá erum við í battl move
      	g_sprites.pointer.drawAtSize(ctx,g_canvas.width*0.25,c[p],20,30); // Teikna pointer
         util.fillBox(ctx, g_canvas.width*0.59,g_canvas.height*0.52, entityManager.picachu.health*2, 10, "black"); //Því picachu er ekki renderaður í þessum glugga þá þarf að teikna healthið hér
-    	if(p===0) g_sprites.pointer.write(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625,16)  // Það sem stendur í boxinu
+    	/*if(p===0) g_sprites.pointer.write(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625,16)  // Það sem stendur í boxinu
     	if(p===1) g_sprites.pointer.write(ctx,"Physical attack",g_canvas.width*0.075,g_canvas.height*0.625,16)
     	if(p===2) g_sprites.pointer.write(ctx,"Tail whipping...",g_canvas.width*0.075,g_canvas.height*0.625,16)
-    	if(p===3) g_sprites.pointer.write(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625,16)
+    	if(p===3) g_sprites.pointer.write(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625,16)*/
+        if(p===0) util.writeText(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625, 2);
+        if(p===1) util.writeText(ctx,"Physical attack",g_canvas.width*0.075,g_canvas.height*0.625, 2);
+        if(p===2) util.writeText(ctx,"Tail whip",g_canvas.width*0.075,g_canvas.height*0.625, 2);
+        if(p===3) util.writeText(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625, 2);
 
     }
 

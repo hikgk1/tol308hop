@@ -34,6 +34,7 @@ function Npc(descr) {
     this._isMoving = false;
     this._isJumping = false;
     this._stepsRemain = 0;
+    this._stepsTillFight = Math.floor(util.randRange(4, 15));
     this._oneTileTime = 0.4;
     this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
 
@@ -71,6 +72,13 @@ Npc.prototype.update = function (du) {
     if(this.targetX !== this.cx ||
        this.targetY !== this.cy) {
         this.moveToTarget(du);
+    }
+
+    if(this._stepsTillFight <= 0 &&
+       this._isMoving === false) {
+        g_inBattle = true;
+        this._stepsTillFight = Math.floor(util.randRange(4, 15));
+        return;
     }
 
     if(spatialManager.findNonEntityInRange(this.cx, this.cy) === 3) {
@@ -130,6 +138,11 @@ Npc.prototype.moveToTarget = function (du) {
         this.cy = this.tmpY;
     } else {
         this.cx = this.tmpX;
+        //f(x) = -0.095(x - 20.5)^2 + 40
+        //describes a "jumping" parabola from x=30 to x=0
+        //f(30) = ~32       y moves by about 1-2 in the first update, so function "starts" at 30
+        //f(20.5) = 40      peek
+        //f(0) = ~0
         this.cy = this.targetY - (-0.095*util.square(((this.targetY-this.tmpY)-20.5)) + 40);
     }
 
@@ -147,7 +160,7 @@ Npc.prototype.moveToTarget = function (du) {
         this._animFrame = 0;
 		//Transfer from inside and outside of Pokelab
 		if(this._dir == 1) {
-			if((this.cx-16)/32 == 12 && (-this.cy+560)/32 == 7 ){
+			if((this.cx-16)/32 === 12 && (-this.cy+560)/32 === 7 ){
 				this._isMoving = false;
 				this.oldX=1360;
 				this.tmpX=1360;
@@ -156,7 +169,7 @@ Npc.prototype.moveToTarget = function (du) {
 			}
 		}
 		if(this._dir == 0) {
-			if(((this.cx-16)/32 == 42 || (this.cx-16)/32 == 43) && (-this.cy+560)/32 == 6  ){
+			if(((this.cx-16)/32 === 42 || (this.cx-16)/32 === 43) && (-this.cy+560)/32 === 6  ){
 				this._isMoving = false;
 				this.oldX=400;
 				this.tmpX=400;
@@ -209,8 +222,11 @@ Npc.prototype.move = function (udlr) {
             if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) { return;}
 			var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale));
             if(inWay === 1) { return;}
-			//for grass animation
-			if(spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale)) == 2) { this.inGrass = true;}
+            //for grass animation
+            if(inWay === 2) { 
+                this._stepsTillFight--;
+                this.inGrass = true;
+            }
             this.targetY += (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -225,8 +241,11 @@ Npc.prototype.move = function (udlr) {
             if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale));
 			if(inWay === 1 || inWay === 3) { return;}
-			//for grass animation
-			if(spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale)) == 2) { this.inGrass = true;}
+            //for grass animation
+			if(inWay === 2) { 
+                this._stepsTillFight--;
+                this.inGrass = true;
+            }
             this.targetY -= (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -241,8 +260,11 @@ Npc.prototype.move = function (udlr) {
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
 			if(inWay === 1 || inWay === 3) { return;}
-			//for grass animation
-			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 2) { this.inGrass = true;}
+            //for grass animation
+			if(inWay === 2) { 
+                this._stepsTillFight--;
+                this.inGrass = true;
+            }
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -262,7 +284,10 @@ Npc.prototype.move = function (udlr) {
 			if(inWay === 1 || inWay === 3) { return;}
             else if(inWay === 3) { return;}
 			//for grass animation
-			if(spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy) == 2) { this.inGrass = true;}
+			if(inWay === 2) { 
+                this._stepsTillFight--;
+                this.inGrass = true;
+            }
             this.targetX -= (16 * this._scale);
 			this._isMoving = true;
             break;
@@ -294,7 +319,7 @@ Npc.prototype.render = function (ctx) {
 		this.sprite.scale = this._scale;
 		this.sprite.drawAnimFrame(ctx, this.cx, this.cy, this._spr[direction][this._animFrame].ax, this._spr[direction][this._animFrame].ay, this._width, this._height);
 		this.sprite.scale = origScale;
-		
+
 		if (this.inGrass) {
 			
 			ctx.drawImage(g_images.grasspatch,this.targetX-16,this.targetY-16);

@@ -122,6 +122,15 @@ nextStep: function(){
 
 },
 act: function(){
+        if(this.battl===2) {
+            g_inBattle = false;
+            this.step = 0;
+            this.battl = 0;
+            this.move = "";
+            this.rattata.health = 60;
+            this.picachu.health = 100;
+            return;
+        }
         if(this.battl===3) { //picachu attacks, bara til að birta myndina
            
             this.battl=4;
@@ -182,8 +191,8 @@ battleUpdate: function(du) {
 battleRender: function(ctx) {
     if(this.step===0){//Teikna upphafsmyndina
         g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-    //g_sprites.battle1.write(ctx,"A wild challanger appears",g_canvas.width*0.1,g_canvas.height*0.8,20);
-    util.writeText(ctx, "A wild challanger appeared", g_canvas.width*0.1,g_canvas.height*0.8, 2);
+        //g_sprites.battle1.write(ctx,"A wild challanger appears",g_canvas.width*0.1,g_canvas.height*0.8,20);
+        util.writeText(ctx, "A wild challanger appeared", g_canvas.width*0.1,g_canvas.height*0.8, 2);
     }
     if(this.step>=1){//Rendera rattata
         g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
@@ -201,11 +210,18 @@ battleRender: function(ctx) {
     }
     if(this.battl===-1){  //Battle moves, pointerinn er renderaður í gegnum rattata, battle3 er bakrunnurinn í þessu statei
         g_sprites.battle3.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        g_sprites.battle3.write(ctx,"Rattata",g_canvas.width*0.07,g_canvas.height*0.11,16);
+        /*g_sprites.battle3.write(ctx,"Rattata",g_canvas.width*0.07,g_canvas.height*0.11,16);
         g_sprites.battle3.write(ctx,"Lightning Bolt",g_canvas.width*0.375,g_canvas.height*0.775,16);
         g_sprites.battle3.write(ctx,"Tackle",g_canvas.width*0.375,g_canvas.height*0.83,16);
         g_sprites.battle3.write(ctx,"Tail Whip",g_canvas.width*0.375,g_canvas.height*0.885,16);
-        g_sprites.battle3.write(ctx,"-----------",g_canvas.width*0.375,g_canvas.height*0.94,16);
+        g_sprites.battle3.write(ctx,"-----------",g_canvas.width*0.375,g_canvas.height*0.94,16);*/
+
+        util.writeText(ctx, "Rattata", g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
+        util.writeText(ctx, "Lightning Bolt",g_canvas.width*0.375,g_canvas.height*0.745, 2);
+        util.writeText(ctx, "Tackle",g_canvas.width*0.375,g_canvas.height*0.80, 2);
+        util.writeText(ctx, "Tail Whip",g_canvas.width*0.375,g_canvas.height*0.855, 2);
+        util.writeText(ctx, "-----------",g_canvas.width*0.375,g_canvas.height*0.91, 2);
+
         this.rattata.render(ctx);    
     }
     if(this.battl===2){ //Ef valið er run í menu, ekki klárað
@@ -214,13 +230,15 @@ battleRender: function(ctx) {
     }
     if(this.battl===3){//Picachu gerir árás
         g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        g_sprites.rattattack.write(ctx,"Picachu uses "+this.move,g_canvas.width*0.1,g_canvas.height*0.8,16);
+        //g_sprites.rattattack.write(ctx,"Picachu uses "+this.move,g_canvas.width*0.1,g_canvas.height*0.8,16);
+        util.writeText(ctx, "Pikachu uses " + this.move, g_canvas.width*0.1,g_canvas.height*0.8, 2);
         this.picachu.render(ctx); 
         this.rattata.render(ctx); 
     }    
     if(this.battl===4){//Rattata gerir árás
         g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        g_sprites.rattattack.write(ctx,"Rattata uses tackle",g_canvas.width*0.1,g_canvas.height*0.8,16);
+        //g_sprites.rattattack.write(ctx,"Rattata uses tackle",g_canvas.width*0.1,g_canvas.height*0.8,16);
+        util.writeText(ctx, "Rattata uses tackle",g_canvas.width*0.1,g_canvas.height*0.8, 2)
         this.picachu.render(ctx); 
         this.rattata.render(ctx); 
     }

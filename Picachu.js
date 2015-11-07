@@ -57,7 +57,8 @@ Picachu.prototype.getPos = function(){  //nota til að velja með pointer
 
 Picachu.prototype.render = function (ctx) {
 	util.fillBox(ctx, g_canvas.width*0.59 ,g_canvas.height*0.52, this.health*2, 10, "black");  //health bar hjá picachu
-	g_sprites.picachu.write(ctx,"Picachu",g_canvas.width*0.5425,g_canvas.height*0.4925,16);      
+	//g_sprites.picachu.write(ctx,"Picachu",g_canvas.width*0.5425,g_canvas.height*0.4925,16);      
+    util.writeText(ctx, "Pikachu", g_canvas.width*0.5425,g_canvas.height*0.4725, 1.5);
     g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Rendera picachu
      if(entityManager.battl===1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
 
