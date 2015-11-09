@@ -48,6 +48,19 @@ Picachu.prototype.update = function (du) {
 
 };
 
+Picachu.prototype.isDead = function(){
+    if(this.health<=0){
+        g_inBattle = false;
+        this.step = 0;
+        this.battl = 0;
+        this.move = "";
+        entityManager.rattata.health = 60;
+        this.health = 100;
+        return;
+    }
+    else return;               
+}
+
 Picachu.prototype.getPos = function(){  //nota til að velja með pointer
 	var cx = x[j];
 	var cy = y[i];
@@ -56,7 +69,9 @@ Picachu.prototype.getPos = function(){  //nota til að velja með pointer
 }
 
 Picachu.prototype.render = function (ctx) {
-	util.fillBox(ctx, g_canvas.width*0.59 ,g_canvas.height*0.52, this.health*2, 10, "black");  //health bar hjá picachu
+    util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");
+    util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");
+	util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, this.health*2, 10, "black"); //health bar hjá picachu
 	//g_sprites.picachu.write(ctx,"Picachu",g_canvas.width*0.5425,g_canvas.height*0.4925,16);      
     util.writeText(ctx, "Pikachu", g_canvas.width*0.5425,g_canvas.height*0.4725, 1.5);
     g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Rendera picachu

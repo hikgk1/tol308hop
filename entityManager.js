@@ -128,16 +128,16 @@ act: function(){
             this.battl = 0;
             this.move = "";
             this.rattata.health = 60;
-            this.picachu.health = 100;
             return;
         }
         if(this.battl===3) { //picachu attacks, bara til að birta myndina
-           
+            this.rattata.isDead();
             this.battl=4;
             return;
         }
         if(this.battl===4){ //rattata attacks
              this.picachu.health -=10*this.rattata.level;
+             this.picachu.isDead();
             this.battl=1
             return;
         }
@@ -183,7 +183,6 @@ generatePokemon : function() {
 },
 
 battleUpdate: function(du) {
-
         this.picachu.update(du);  //Update picachu
         this.rattata.update(du);  //Update rattata
 },
