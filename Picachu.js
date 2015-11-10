@@ -51,9 +51,9 @@ Picachu.prototype.update = function (du) {
 Picachu.prototype.isDead = function(){
     if(this.health<=0){
         g_inBattle = false;
-        this.step = 0;
-        this.battl = 0;
-        this.move = "";
+        entityManager.step = 0;
+        entityManager.battl = 0;
+        entityManager.move = "";
         entityManager.rattata.health = 60;
         this.health = 100;
         return;

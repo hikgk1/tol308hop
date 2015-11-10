@@ -1,10 +1,8 @@
 /*
-
 spatialManager.js
 
 A module which handles spatial lookup, as required for...
 e.g. general collision detection.
-
 */
 
 "use strict";
@@ -19,9 +17,7 @@ e.g. general collision detection.
 var spatialManager = {
 
 // "PRIVATE" DATA
-
 _nextSpatialID : 1, // make all valid IDs non-falsey (i.e. don't start at 0)
-
 _entities : [],
 // walls, grass
 _nonentities : [],
@@ -29,13 +25,8 @@ _nonentities : [],
 // "PRIVATE" METHODS
 
 // PUBLIC METHODS
-
-
 getNewSpatialID : function() {
-
-    // TODO: YOUR STUFF HERE!
     return this._nextSpatialID++;
-
 },
 
 register: function(entity) {
@@ -43,7 +34,6 @@ register: function(entity) {
     var spatialID = entity.getSpatialID();
     
     this._entities[spatialID] = {posX : pos.posX, posY : pos.posY, radius : entity.getRadius(), obj : entity};
-
 },
 
 unregister: function(entity) {
@@ -52,8 +42,6 @@ unregister: function(entity) {
     if(spatialID in this._entities) {
         delete this._entities[spatialID];
     }
-    
-
 },
 
 findEntityInRange: function(posX, posY, radius) {
@@ -64,9 +52,6 @@ findEntityInRange: function(posX, posY, radius) {
             return e.obj;
         }
     }
-	
-	
-
 },
 
 findNonEntityInRange: function(posX,posY) {
@@ -102,7 +87,6 @@ render: function(ctx) {
 },
 
 manageWallsAndGrass : function() {
-
 	fillCollisionMatrix(this);
 }
 

@@ -1,15 +1,14 @@
 // ======
 // ENTITY
 // ======
-/*
 
+/*
 Provides a set of common functions which can be "inherited" by all other
 game Entities.
 
 JavaScript's prototype-based inheritance system is unusual, and requires 
 some care in use. In particular, this "base" should only provide shared
 functions... shared data properties are potentially quite confusing.
-
 */
 
 "use strict";
@@ -21,19 +20,15 @@ functions... shared data properties are potentially quite confusing.
 12345678901234567890123456789012345678901234567890123456789012345678901234567890
 */
 
-
 function Entity() {
-
 /*
     // Diagnostics to check inheritance stuff
     this._entityProperty = true;
     console.dir(this);
 */
-
 };
 
 Entity.prototype.setup = function (descr) {
-
     // Apply all setup properies from the (optional) descriptor
     for (var property in descr) {
         this[property] = descr[property];

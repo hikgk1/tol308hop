@@ -11,10 +11,8 @@
 12345678901234567890123456789012345678901234567890123456789012345678901234567890
 */
 
-
 // A generic contructor which accepts an arbitrary descriptor object
 function Npc(descr) {
-
     // Common inherited setup logic from Entity
     this.setup(descr);
     
@@ -64,7 +62,6 @@ Npc.prototype.cy = 208;
 Npc.prototype.isMainChar = false;
     
 Npc.prototype.update = function (du) {
-    
     spatialManager.unregister(this);
 
     if(this._isDeadNow) return entityManager.KILL_ME_NOW;
@@ -86,13 +83,8 @@ Npc.prototype.update = function (du) {
         this._isJumping = true;
     }
 
-    // Perform movement substeps
-    //var steps = this.numSubSteps;
-    //var dStep = du / steps;
     if(this.isMainChar) {
-        //for (var i = 0; i < steps; ++i) {
-            this.computeSubStep(du);
-        //}
+        this.computeSubStep(du);
     }
 
     if(this._stepsRemain > 0 && 
@@ -102,11 +94,10 @@ Npc.prototype.update = function (du) {
         this._stepsRemain -= 1;
     }
 
-    // Handle firing
+    // Handle actions
     this.maybeAction();
 
     spatialManager.register(this);
-
 };
 
 Npc.prototype.setScale = function (scale) {
@@ -205,7 +196,6 @@ Npc.prototype.computeSubStep = function (du) {
 };
 
 Npc.prototype.move = function (udlr) {
-	
     //console.log((this.cx-16)/32,(-this.cy+560)/32);
     this._scale = Math.abs(this._scale);
 	this.prevGrass = this.inGrass;
@@ -269,7 +259,6 @@ Npc.prototype.move = function (udlr) {
 			this._isMoving = true;
             break;
         case 3:
-			
             this._scale = -Math.abs(this._scale);
 			
 			if(this._dir != udlr) { 
@@ -293,7 +282,6 @@ Npc.prototype.move = function (udlr) {
             break;
     }
 	this._dir = udlr;
-    
 };
 
 Npc.prototype.moveMult = function (udlr, nr) {
@@ -302,15 +290,12 @@ Npc.prototype.moveMult = function (udlr, nr) {
 };
 
 Npc.prototype.maybeAction = function () {
-
     if (keys[this.KEY_ACTION]) {
            
     }
-    
 };
 
 Npc.prototype.render = function (ctx) {
-	
 		var origScale = this.sprite.scale;
 		var direction;
 		if(this._dir === 3) direction = 2;
@@ -321,7 +306,6 @@ Npc.prototype.render = function (ctx) {
 		this.sprite.scale = origScale;
 
 		if (this.inGrass) {
-			
 			ctx.drawImage(g_images.grasspatch,this.targetX-16,this.targetY-16);
 			if(this.prevGrass) {  ctx.drawImage(g_images.grasspatch,this.oldX-16,this.oldY-16);}
 			

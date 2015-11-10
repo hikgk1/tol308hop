@@ -40,9 +40,9 @@ Rattata.prototype.update = function (du) {
 Rattata.prototype.isDead = function(){
     if(this.health<=0){
         g_inBattle = false;
-        this.step = 0;
-        this.battl = 0;
-        this.move = "";
+        entityManager.step = 0;
+        entityManager.battl = 0;
+        entityManager.move = "";
         this.health = 60;
         return;
     }

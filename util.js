@@ -5,9 +5,7 @@
 
 "use strict";
 
-
 var util = {
-
 
 // RANGES
 // ======
@@ -37,7 +35,6 @@ isBetween: function(value, lowBound, highBound) {
     return true;
 },
 
-
 // RANDOMNESS
 // ==========
 
@@ -45,14 +42,12 @@ randRange: function(min, max) {
     return (min + Math.random() * (max - min));
 },
 
-
 // MISC
 // ====
 
 square: function(x) {
     return x*x;
 },
-
 
 // DISTANCES
 // =========
@@ -72,7 +67,6 @@ wrappedDistSq: function(x1, y1, x2, y2, xWrap, yWrap) {
     }
     return this.square(dx) + this.square(dy);
 },
-
 
 // CANVAS OPS
 // ==========

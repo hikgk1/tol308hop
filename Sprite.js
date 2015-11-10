@@ -11,7 +11,6 @@
 12345678901234567890123456789012345678901234567890123456789012345678901234567890
 */
 
-
 // Construct a "sprite" from the given `image`,
 //
 function Sprite(image) {
@@ -20,7 +19,7 @@ function Sprite(image) {
     this.width = image.width;
     this.height = image.height;
     this.scale = 1;
-}
+};
 
 Sprite.prototype.drawAt = function (ctx, x, y) {
     ctx.drawImage(this.image, 
@@ -60,7 +59,6 @@ Sprite.prototype.drawCentredAt = function (ctx, cx, cy, rotation) {
 };  
 
 Sprite.prototype.drawWrappedCentredAt = function (ctx, cx, cy, rotation) {
-    
     // Get "screen width"
     var sw = g_canvas.width;
     
@@ -73,7 +71,6 @@ Sprite.prototype.drawWrappedCentredAt = function (ctx, cx, cy, rotation) {
 };
 
 Sprite.prototype.drawWrappedVerticalCentredAt = function (ctx, cx, cy, rotation) {
-
     // Get "screen height"
     var sh = g_canvas.height;
     
