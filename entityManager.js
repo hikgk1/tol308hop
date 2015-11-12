@@ -118,6 +118,9 @@ nextStep: function(){
 act: function(){
         if(this.battl===2) {
             g_inBattle = false;
+            g_sounds.battle.pause();
+            g_sounds.battle.currentTime = 0;
+            g_sounds.route1.play();
             this.step = 0;
             this.battl = 0;
             this.move = "";

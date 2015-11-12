@@ -51,6 +51,9 @@ Picachu.prototype.update = function (du) {
 Picachu.prototype.isDead = function(){
     if(this.health<=0){
         g_inBattle = false;
+        g_sounds.battle.pause();
+        g_sounds.battle.currentTime = 0;
+        g_sounds.route1.play();
         entityManager.step = 0;
         entityManager.battl = 0;
         entityManager.move = "";
@@ -72,9 +75,8 @@ Picachu.prototype.render = function (ctx) {
     util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");
     util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");
 	util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, this.health*2, 10, "black"); //health bar hjá picachu
-	//g_sprites.picachu.write(ctx,"Picachu",g_canvas.width*0.5425,g_canvas.height*0.4925,16);      
     util.writeText(ctx, "Pikachu", g_canvas.width*0.5425,g_canvas.height*0.4725, 1.5);
     g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Rendera picachu
-     if(entityManager.battl===1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
+    if(entityManager.battl===1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
 
 };

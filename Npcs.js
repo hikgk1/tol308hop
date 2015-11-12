@@ -67,6 +67,18 @@ Npc.prototype.update = function (du) {
 
     if(this._isDeadNow) return entityManager.KILL_ME_NOW;
 
+    if(this.cy === -112) {
+        g_sounds.palletTown.pause();
+        g_sounds.route1.play();
+        g_sounds.palletTown.currentTime = 0;
+    }
+
+    if(this.cy === 16) {
+        g_sounds.route1.pause();
+        g_sounds.palletTown.play();
+        g_sounds.route1.currentTime = 0;
+    }
+
     if(this.targetX !== this.cx ||
        this.targetY !== this.cy) {
         this.moveToTarget(du);
@@ -76,6 +88,11 @@ Npc.prototype.update = function (du) {
        this._isMoving === false) {
         g_inBattle = true;
         this._stepsTillFight = Math.floor(util.randRange(4, 15));
+        g_sounds.palletTown.pause();
+        g_sounds.palletTown.currentTime = 0;
+        g_sounds.route1.pause();
+        g_sounds.route1.currentTime = 0;
+        g_sounds.battle.play();
         return;
     }
 

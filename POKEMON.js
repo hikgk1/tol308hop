@@ -66,6 +66,8 @@ function gatherInputs() {
 
 // GAME-SPECIFIC UPDATE LOGIC
 
+var g_mute = false;
+
 function updateSimulation(du) {
     
     processDiagnostics();
@@ -75,6 +77,16 @@ function updateSimulation(du) {
     } else {
         entityManager.battleUpdate(du);
         eatKey(Rattata.prototype.KEY_FIRE);
+    }
+
+    if(eatKey('M'.charCodeAt(0))) {
+        g_mute = !g_mute;
+    }
+
+    if(g_mute) {
+        for(var sound in g_sounds) {
+            g_sounds[sound].pause();
+        }
     }
 }
 
@@ -152,7 +164,19 @@ function requestPreloads() {
         boarder: "./sheets/boxboarder.png"
     };
 
-    imagesPreload(requiredImages, g_images, preloadDone);
+    imagesPreload(requiredImages, g_images, preloadSounds);
+}
+
+var g_sounds = {};
+
+function preloadSounds() {
+    var requiredSounds = {
+        palletTown : "./music/PalletTown.mp3",
+        route1 : "./music/Route1.mp3",
+        battle : "./music/Battle.mp3"
+    }
+
+    soundsPreload(requiredSounds, g_sounds, preloadDone)
 }
 
 var g_sprites = {};
@@ -173,6 +197,7 @@ function preloadDone() {
 
     entityManager.init();
 
+    g_sounds.palletTown.play();
     main.init();
 }
 

@@ -40,6 +40,9 @@ Rattata.prototype.update = function (du) {
 Rattata.prototype.isDead = function(){
     if(this.health<=0){
         g_inBattle = false;
+        g_sounds.battle.pause();
+        g_sounds.battle.currentTime = 0;
+        g_sounds.route1.play();
         entityManager.step = 0;
         entityManager.battl = 0;
         entityManager.move = "";
@@ -62,11 +65,7 @@ Rattata.prototype.render = function (ctx) {
         util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");
         util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");
         util.fillBox(ctx, g_canvas.width*0.585,g_canvas.height*0.525, entityManager.picachu.health*2, 10, "black"); //Því picachu er ekki renderaður í þessum glugga þá þarf að teikna healthið hér
-        /*if(p===0) g_sprites.pointer.write(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625,16)  // Það sem stendur í boxinu
-    	if(p===1) g_sprites.pointer.write(ctx,"Physical attack",g_canvas.width*0.075,g_canvas.height*0.625,16)
-    	if(p===2) g_sprites.pointer.write(ctx,"Tail whipping...",g_canvas.width*0.075,g_canvas.height*0.625,16)
-    	if(p===3) g_sprites.pointer.write(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625,16)*/
-        if(p===0) util.writeText(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625, 2);
+        if(p===0) util.writeText(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625, 2); // Það sem stendur í boxinu
         if(p===1) util.writeText(ctx,"Physical attack",g_canvas.width*0.075,g_canvas.height*0.625, 2);
         if(p===2) util.writeText(ctx,"Tail whip",g_canvas.width*0.075,g_canvas.height*0.625, 2);
         if(p===3) util.writeText(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625, 2);
