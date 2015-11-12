@@ -104,6 +104,54 @@ writeText: function (ctx, w, x, y, scale) {
         ctx.drawImage(g_sprites.font.image, tmp[0], tmp[1], 8, 8, x, y, 8*scale, 8*scale);
         x += 8*scale;
     }
+},
+
+drawBoarderBox: function (ctx, x, y, width, height) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.drawImage(g_sprites.boarder.image, 0, 0, 15, 15, 0, 0, 32, 32);
+    
+    for (var i = 1; i < width-1; i++) {
+        ctx.drawImage(g_sprites.boarder.image, 16, 0, 15, 15, i*32, 0, 32, 32);
+    }
+
+    ctx.scale(-1, 1);
+    ctx.drawImage(g_sprites.boarder.image, 0, 0, 15, 15, -width*32, 0, 32, 32);
+    ctx.scale(-1, 1);
+
+    for(var i = 1; i < height-1; i++) {
+        ctx.drawImage(g_sprites.boarder.image, 32, 0, 15, 15, 0, i*32, 32, 32);
+        ctx.scale(-1, 1);
+        ctx.drawImage(g_sprites.boarder.image, 32, 0, 15, 15, -width*32, i*32, 32, 32);
+        ctx.scale(-1, 1);
+    }
+
+    ctx.scale(1, -1);
+    ctx.drawImage(g_sprites.boarder.image, 0, 0, 15, 15, 0, -height*32, 32, 32);
+    ctx.scale(1, -1);
+
+    ctx.scale(1, -1);
+    for (var i = 1; i < width-1; i++) {
+        ctx.drawImage(g_sprites.boarder.image, 16, 0, 15, 15, i*32, -height*32, 32, 32);
+    }
+    ctx.scale(1, -1);
+
+    ctx.scale(-1, -1);
+    ctx.drawImage(g_sprites.boarder.image, 0, 0, 15, 15, -width*32, -height*32, 32, 32);
+    ctx.scale(-1, -1);
+
+    util.fillBox(ctx, 16, 16, (width-1)*32, (height-1)*32, "white");
+
+    ctx.restore();
+},
+
+chatBoxText: function (w) {
+    g_ctx.save();
+    g_ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+    util.drawBoarderBox(g_ctx, 0, 12*32, 20, 6);
+    util.writeText(g_ctx, w.substr(0,19).trim(), 1.5*32, 13.5*32, 3.5);
+    util.writeText(g_ctx, w.substr(19,19).trim(), 1.5*32, 15*32, 3.5);
+    g_ctx.restore()
 }
 
 };

@@ -31,6 +31,7 @@ function Npc(descr) {
     this._animFrame = 0;
     this._isMoving = false;
     this._isJumping = false;
+    this._isTalking = false;
     this._stepsRemain = 0;
     this._stepsTillFight = Math.floor(util.randRange(4, 15));
     this._oneTileTime = 0.4;
@@ -83,7 +84,7 @@ Npc.prototype.update = function (du) {
         this._isJumping = true;
     }
 
-    if(this.isMainChar) {
+    if(this.isMainChar && !this._isTalking) {
         this.computeSubStep(du);
     }
 
@@ -290,9 +291,27 @@ Npc.prototype.moveMult = function (udlr, nr) {
 };
 
 Npc.prototype.maybeAction = function () {
-    if (keys[this.KEY_ACTION]) {
-           
+    if (eatKey(this.KEY_ACTION)) {
+        if(this._isTalking === false) {
+            if(this._dir === 0) {
+                this.talkTo(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale)));
+            } else if (this._dir === 1) {
+                this.talkTo(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale)));
+            } else if (this._dir === 2) {
+                this.talkTo(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale)));
+            } else {
+                this.talkTo(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, -(8 * this._scale)));
+            }
+        } else {
+            this._isTalking = false;
+        }
     }
+};
+
+Npc.prototype.talkTo = function (npc) {
+    if(npc === undefined) return;
+    this._chatText = npc.chatText;
+    this._isTalking = true;
 };
 
 Npc.prototype.render = function (ctx) {
@@ -305,9 +324,9 @@ Npc.prototype.render = function (ctx) {
 		this.sprite.drawAnimFrame(ctx, this.cx, this.cy, this._spr[direction][this._animFrame].ax, this._spr[direction][this._animFrame].ay, this._width, this._height);
 		this.sprite.scale = origScale;
 
-		if (this.inGrass) {
-			ctx.drawImage(g_images.grasspatch,this.targetX-16,this.targetY-16);
-			if(this.prevGrass) {  ctx.drawImage(g_images.grasspatch,this.oldX-16,this.oldY-16);}
-			
+		if ((this.inGrass && this.prevGrass) || (this.inGrass && !this._isMoving)) {
+			/*ctx.drawImage(g_images.grasspatch,this.targetX-16,this.targetY-16);
+			if(this.prevGrass) {  ctx.drawImage(g_images.grasspatch,this.oldX-16,this.oldY-16);}*/
+            ctx.drawImage(g_images.grasspatch, this.cx-16, this.cy);
 		}
 };

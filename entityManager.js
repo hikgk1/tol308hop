@@ -79,6 +79,9 @@ init: function() {
     entityManager.moveMultNpc(3, 2, 0);
     spatialManager.manageWallsAndGrass();
     this.generatePokemon();
+    entityManager._npcs[1].chatText = "This is a test";
+    entityManager._npcs[2].chatText = "This one can talk  as well";
+    entityManager._npcs[3].chatText = "Some more text";
 },
 
 displayNpc : function (spArr, cx, cy, mainChar,inGrass) {
