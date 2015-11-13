@@ -13,16 +13,15 @@
 
 
 // A generic contructor which accepts an arbitrary descriptor object
-function Rattata(descr) {
+function Rattata(img,descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
+    g_sprites.rattata = new Sprite(img);
 }
 Rattata.prototype.KEY_FIRE = ' '.charCodeAt(0);  //Space bar
-
 Rattata.prototype.health = 60;
 Rattata.prototype.level = 1;
-
 var c = [g_canvas.height*0.725, g_canvas.height*0.78, g_canvas.height*0.83, g_canvas.height*0.885];
 var p = 0; // y-hnit
 Rattata.prototype.getPos = function(){  //nota til að velja með pointer

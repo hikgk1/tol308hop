@@ -186,8 +186,6 @@ function preloadDone() {
     g_sprites.npcs  = new Sprite(g_images.npcSheet);
     g_sprites.battle1 = new Sprite(g_images.battle1);
     g_sprites.battle2 = new Sprite(g_images.battle2);
-    g_sprites.rattata = new Sprite(g_images.rat);
-    g_sprites.picachu = new Sprite(g_images.pica);
     g_sprites.battle3 = new Sprite(g_images.battle3);
     g_sprites.battle4 = new Sprite(g_images.battle4);
     g_sprites.pointer = new Sprite(g_images.pointer);
@@ -196,7 +194,6 @@ function preloadDone() {
     g_sprites.boarder = new Sprite(g_images.boarder);
 
     entityManager.init();
-
     g_sounds.palletTown.play();
     main.init();
 }

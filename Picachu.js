@@ -7,10 +7,11 @@
 12345678901234567890123456789012345678901234567890123456789012345678901234567890
 */
 
-function Picachu(descr) {
+function Picachu(img,descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
+    g_sprites.picachu = new Sprite(img);
 }
 Picachu.prototype.KEY_W = 'W'.charCodeAt(0);
 Picachu.prototype.KEY_S  = 'S'.charCodeAt(0);

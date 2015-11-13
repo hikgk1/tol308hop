@@ -24,8 +24,11 @@ battl: 0,
 move: "",
 rattata: 0,
 picachu: 0,
-
+id: 0,
+Playerid: 0,
+poke_img: [],
 _npcs    : [],
+enemyMove: 0,
 
 // "PRIVATE" METHODS
 
@@ -130,12 +133,13 @@ act: function(){
 
         if(this.battl===3) { //picachu attacks, bara til að birta myndina
             this.battl=4;
+            this.enemyMove=util.randomNum(1,4); //ákveður attack move hjá enemy
             this.rattata.isDead();
             return;
         }
 
         if(this.battl===4){ //rattata attacks
-            this.picachu.health -=10*this.rattata.level;
+            this.picachu.health -= g_PokemonList[this.Playerid][this.enemyMove+4]*this.rattata.level;
             this.battl=1
             this.picachu.isDead();
             return;
@@ -144,22 +148,23 @@ act: function(){
         if(this.battl===-1){ // bardaga move
             var pos = this.rattata.getPos()  //Sæki pos á pointer til að vita hvaða move er valið
             if(pos===g_canvas.height*0.725){
-                this.rattata.health -=10*this.picachu.level;
-                this.move="Thunder bolt"
+                this.rattata.health -= g_PokemonList[this.Playerid][5]*this.picachu.level;
+                this.move=g_PokemonList[this.Playerid][1];
             }
 
             if(pos===g_canvas.height*0.78){
-                this.rattata.health -=15*this.picachu.level;
-                this.move="Tackle"
+                this.rattata.health -= g_PokemonList[this.Playerid][6]*this.picachu.level;
+                this.move= g_PokemonList[this.Playerid][2];
             }
 
             if(pos===g_canvas.height*0.83){
-                this.rattata.health -=10*this.picachu.level;
-                this.move="Tail whip"
+                this.rattata.health -= g_PokemonList[this.Playerid][7]*this.picachu.level;
+                this.move=g_PokemonList[this.Playerid][3];
             }
 
             if(pos===g_canvas.height*0.885){
-                this.move="nothing"
+                this.rattata.health -= g_PokemonList[this.Playerid][8]*this.picachu.level;
+                this.move=g_PokemonList[this.Playerid][4];
             }
 
             this.battl=3;  //Hoppum í picachu attacks
@@ -172,6 +177,7 @@ act: function(){
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.7625) this.battl=-1;  //Fight valið, hoppum í bardaga moves gluggann
             if(pos[0]===g_canvas.width*0.7425 && pos[1]===g_canvas.height*0.7625) {  //PKMN valið
                 console.log("Ekki með í demo");
+                this.rattata = new Rattata(g_images.pica);
                 this.battl=1;  //Höldum áfram í menu
             }
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.87) {  // ITEM valið
@@ -180,10 +186,16 @@ act: function(){
             }
         }
 },
+generateEnemy: function() {
+        this.poke_img=[g_images.pica,g_images.rat];
+        this.id=util.randomNum(0,this.poke_img.length-1);
+        this.rattata = new Rattata(this.poke_img[this.id]);
+
+},
 
 generatePokemon : function() {
-        this.rattata = new Rattata();
-        this.picachu = new Picachu();
+        this.generateEnemy();
+        this.picachu = new Picachu(g_images.pica);
 },
 
 battleUpdate: function(du) {
@@ -193,8 +205,8 @@ battleUpdate: function(du) {
 
 battleRender: function(ctx) {
     if(this.step===0){//Teikna upphafsmyndina
-        g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        util.writeText(ctx, "A wild challanger appeared", g_canvas.width*0.1,g_canvas.height*0.8, 2);
+        g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
+        util.writeText(ctx, "A wild " + g_PokemonList[this.id][0] + " appears", g_canvas.width*0.1,g_canvas.height*0.8, 2);
     }
 
     if(this.step>=1){//Rendera rattata
@@ -204,7 +216,7 @@ battleRender: function(ctx) {
 
     if(this.step>=2){//Næsta umhverfi
         g_sprites.battle2.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        util.writeText(ctx, "Rattata", g_canvas.width*0.07,g_canvas.height*0.09, 1.5)
+        util.writeText(ctx, g_PokemonList[this.id][0], g_canvas.width*0.07,g_canvas.height*0.09, 1.5)
         this.rattata.render(ctx);
     }
 
@@ -216,11 +228,11 @@ battleRender: function(ctx) {
     if(this.battl===-1){  //Battle moves, pointerinn er renderaður í gegnum rattata, battle3 er bakrunnurinn í þessu statei
         g_sprites.battle3.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
 
-        util.writeText(ctx, "Rattata", g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
-        util.writeText(ctx, "Lightning Bolt",g_canvas.width*0.375,g_canvas.height*0.745, 2);
-        util.writeText(ctx, "Tackle",g_canvas.width*0.375,g_canvas.height*0.80, 2);
-        util.writeText(ctx, "Tail Whip",g_canvas.width*0.375,g_canvas.height*0.855, 2);
-        util.writeText(ctx, "-----------",g_canvas.width*0.375,g_canvas.height*0.91, 2);
+        util.writeText(ctx, g_PokemonList[this.id][0], g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
+        util.writeText(ctx, g_PokemonList[this.Playerid][1],g_canvas.width*0.375,g_canvas.height*0.745, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid][2],g_canvas.width*0.375,g_canvas.height*0.80, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid][3],g_canvas.width*0.375,g_canvas.height*0.855, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid][4],g_canvas.width*0.375,g_canvas.height*0.91, 2);
 
         this.rattata.render(ctx);
     }
@@ -232,14 +244,14 @@ battleRender: function(ctx) {
 
     if(this.battl===3){//Picachu gerir árás
         g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        util.writeText(ctx, "Pikachu uses " + this.move, g_canvas.width*0.1,g_canvas.height*0.8, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid][0]+" uses " + this.move, g_canvas.width*0.1,g_canvas.height*0.8, 2);
         this.picachu.render(ctx);
         this.rattata.render(ctx);
     }
 
     if(this.battl===4){//Rattata gerir árás
-        g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        util.writeText(ctx, "Rattata uses tackle",g_canvas.width*0.1,g_canvas.height*0.8, 2)
+        g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
+        util.writeText(ctx, g_PokemonList[this.id][0]+" uses "+g_PokemonList[this.id][this.enemyMove],g_canvas.width*0.1,g_canvas.height*0.8, 2);
         this.picachu.render(ctx);
         this.rattata.render(ctx);
     }

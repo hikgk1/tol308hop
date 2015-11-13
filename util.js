@@ -152,6 +152,13 @@ chatBoxText: function (w) {
     util.writeText(g_ctx, w.substr(0,19).trim(), 1.5*32, 13.5*32, 3.5);
     util.writeText(g_ctx, w.substr(19,19).trim(), 1.5*32, 15*32, 3.5);
     g_ctx.restore()
+},
+
+randomNum: function(min,max){
+    var num = min + (Math.random()*max);
+    num=Math.floor(num);
+    console.log(num);
+    return num;
 }
 
 };
