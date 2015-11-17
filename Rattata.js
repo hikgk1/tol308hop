@@ -49,7 +49,10 @@ Rattata.prototype.isDead = function(){
         entityManager.step = 0;
         entityManager.battl = 0;
         entityManager.move = "";
+        entityManager.generateEnemy();
         entityManager.picachu[entityManager.i].experience+=50+this.level*10;
+        entityManager.i=0;
+        g_sprites.picachu = new Sprite(entityManager.poke_imgF[entityManager.Playerid[entityManager.i]]);
         return;
     }
     else return;               

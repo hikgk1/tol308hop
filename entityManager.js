@@ -120,12 +120,13 @@ setScale : function (scale) {
 
 nextStep: function(){
         this.step++;  //Notum þetta til að rúlla í gegnum hvað á að rendera þar til step=3, þá erum við komin í bardagann sjálfann og notum act function
+        this.picachu[this.i].isDead();
         if(this.step===3) this.battl=1;
 },
 
 act: function(){
-    console.log(this.i)
         if(this.battl===2) {
+            this.generateEnemy();
             g_inBattle = false;
             g_sounds.battle.pause();
             g_sounds.battle.currentTime = 0;
@@ -133,12 +134,14 @@ act: function(){
             this.step = 0;
             this.battl = 0;
             this.move = "";
+            this.i=0;
+            g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
             return;
         }
 
         if(this.battl===3) { //picachu attacks, bara til að birta myndina
             this.battl=4;
-            this.enemyMove=util.randomNum(1,4); //ákveður attack move hjá enemy
+            this.enemyMove=util.randomNum(1,3); //ákveður attack move hjá enemy
             this.rattata.isDead();
             return;
         }
@@ -182,24 +185,48 @@ act: function(){
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.7625) this.battl=-1;  //Fight valið, hoppum í bardaga moves gluggann
             if(pos[0]===g_canvas.width*0.7425 && pos[1]===g_canvas.height*0.7625) {  //PKMN valið
                 console.log("Skiptum í næsta pokemon");
+                if(this.picachu.length==1) return;
                 if(this.i==this.Playerid.length-1) this.i=0;
                 else this.i+=1
-                g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
-
-                this.battl=3; 
+                    console.log(this.picachu);
+                if(this.picachu[this.i].health>0){
+                    g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
+                    this.battl=3;
+                    return
+                }
+                else this.picachu[this.i].isDead();
+                return;
             }
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.87) {  // ITEM valið
                 console.log("Kastar Poke kúlu");
                 if(this.Playerid.length==7){
                     console.log("Má bara hafa 6 pokemona");
-                    this.battl=1;  //Höldum áfram í menu
                     return;
                 }
-                this.picachu.push(new Picachu(this.poke_imgF[this.id],{health:this.rattata.health+this.rattata.level*30
-                    ,level:this.rattata.level, scale:(this.rattata.health+this.rattata.level*30)/200}))
-                this.i +=1;
-                this.Playerid[this.i]=this.id;
-                this.battl=3; 
+                var h = ((this.rattata.health/this.rattata.scale)/200)*10
+                var j = util.randomNum(1,h);
+                if(j!=1){
+                    console.log(j);
+                    console.log("Hann slapp")
+                    this.battl=3;
+                    return;
+                }
+                this.picachu.push(new Picachu(this.poke_imgF[this.id],{health:40+this.rattata.level*20
+                    ,level:this.rattata.level, scale:(40+this.rattata.level*20)/200}))
+                this.Playerid[this.i+1]=this.id;
+                console.log("Hann náðist!")
+                this.generateEnemy();
+                g_inBattle = false;
+                g_sounds.battle.pause();
+                g_sounds.battle.currentTime = 0;
+                g_sounds.route1.play();
+                this.step = 0;
+                this.battl = 0;
+                this.move = "";
+                this.i=0;
+                g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
+                return;
+
             }
         }
 },
