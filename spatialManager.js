@@ -72,7 +72,7 @@ render: function(ctx) {
         ctx.fillText(ID-1, e.posX-6, e.posY+8);
     }
 
-    for (var i = 0; i < this._nonentities.length; i++) {
+    for (var i = -10; i < this._nonentities.length; i++) {
         for (var j = 0; j < this._nonentities[i].length; j++) {
             if(this._nonentities[i][j] === 1) {
                 util.fillBox(ctx, i*32, -(j*32)+544, 32, 32, "rgba(255, 0, 0, 0.5)");

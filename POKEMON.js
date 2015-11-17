@@ -121,8 +121,9 @@ function renderSimulation(ctx) {
         ctx.save();
 
         ctx.translate(304-entityManager._npcs[0].cx,272-entityManager._npcs[0].cy)
-        ctx.drawImage(g_images.route1,0,-1152);
+        ctx.drawImage(g_images.route1,-284,-1152);
         ctx.drawImage(g_images.palletTown,-286,-94);
+		ctx.drawImage(g_images.viridanCity,-542,-2560);
 		ctx.drawImage(g_images.pokelab,896,-416)
 
         entityManager.render(ctx);
@@ -149,6 +150,7 @@ function requestPreloads() {
     var requiredImages = {
         npcSheet   : "./sheets/asheet.png",
 		palletTown   : "./sheets/pallet_town.png",
+		viridanCity   : "./sheets/viridan3.png",
 		route1   : "./sheets/route1test.png",
         battle1: "./sheets/Battle1.png",
         rat: "./sheets/rat.png",

@@ -77,12 +77,15 @@ deferredSetup : function () {
 },
 
 init: function() {
-    entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,false);
+    //entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,false);
+	entityManager.displayNpc(this.npcList.mainChar, 240, 240, true,false);
     entityManager.displayNpc(this.npcList.npc1, 208, 240, false,false);
     entityManager.displayNpc(this.npcList.npc1, 176, -336, false,false);
     entityManager.displayNpc(this.npcList.npc1, 496, -720, false,true);
     entityManager.moveMultNpc(3, 2, 0);
+	console.log(spatialManager._nonentities);
     spatialManager.manageWallsAndGrass();
+	console.log(spatialManager._nonentities);
     this.generatePokemon();
     entityManager._npcs[1].chatText = "This is a test";
     entityManager._npcs[2].chatText = "This one can talk  as well";
