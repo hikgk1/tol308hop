@@ -128,7 +128,7 @@ function renderSimulation(ctx) {
 
         entityManager.render(ctx);
         if(entityManager._npcs[0]._isTalking) {
-            util.chatBoxText(entityManager._npcs[0]._chatText);
+            util.chatBoxText(ctx, entityManager._npcs[0]._chatText);
         }
 
         if (g_renderSpatialDebug) spatialManager.render(ctx);
@@ -183,7 +183,11 @@ function preloadSounds() {
         palletTown : "./music/PalletTown.mp3",
         viridian : "./music/viridian.mp3",
         route1 : "./music/Route1.mp3",
-        battle : "./music/Battle.mp3"
+        battle : "./music/Battle.mp3",
+        pikachu : "./sfx/pikachu.mp3",
+        rattata : "./sfx/rattata.mp3",
+        pidgey : "./sfx/pidgey.mp3",
+        caterpie : "./sfx/caterpie.mp3"
     }
 
     soundsPreload(requiredSounds, g_sounds, preloadDone)
@@ -202,6 +206,11 @@ function preloadDone() {
     g_sprites.rattattack = new Sprite(g_images.rattattack);
     g_sprites.font = new Sprite(g_images.font);
     g_sprites.boarder = new Sprite(g_images.boarder);
+
+    g_PokemonList[0][9] = g_sounds.pikachu;
+    g_PokemonList[1][9] = g_sounds.rattata;
+    g_PokemonList[2][9] = g_sounds.pidgey;
+    g_PokemonList[3][9] = g_sounds.caterpie;
 
     entityManager.init();
     g_sounds.palletTown.play();

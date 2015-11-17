@@ -185,12 +185,13 @@ act: function(){
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.7625) this.battl=-1;  //Fight valið, hoppum í bardaga moves gluggann
             if(pos[0]===g_canvas.width*0.7425 && pos[1]===g_canvas.height*0.7625) {  //PKMN valið
                 console.log("Skiptum í næsta pokemon");
-                if(this.picachu.length==1) return;
-                if(this.i==this.Playerid.length-1) this.i=0;
+                if(this.picachu.length===1) return;
+                if(this.i===this.Playerid.length-1) this.i=0;
                 else this.i+=1
                     console.log(this.picachu);
                 if(this.picachu[this.i].health>0){
                     g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
+                    g_PokemonList[this.i][9].play();
                     this.battl=3;
                     return
                 }
@@ -199,13 +200,13 @@ act: function(){
             }
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.87) {  // ITEM valið
                 console.log("Kastar Poke kúlu");
-                if(this.Playerid.length==7){
+                if(this.Playerid.length===7){
                     console.log("Má bara hafa 6 pokemona");
                     return;
                 }
                 var h = ((this.rattata.health/this.rattata.scale)/200)*10
                 var j = util.randomNum(1,h);
-                if(j!=1){
+                if(j!==1){
                     console.log(j);
                     console.log("Hann slapp")
                     this.battl=3;
@@ -255,7 +256,7 @@ battleRender: function(ctx) {
         util.writeText(ctx, "A wild " + g_PokemonList[this.id][0] + " appears", g_canvas.width*0.1,g_canvas.height*0.8, 2);
     }
 
-    if(this.step>=1){//Rendera rattata
+    if(this.step===1){//Rendera rattata
         g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
         this.rattata.render(ctx);
     }

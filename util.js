@@ -145,12 +145,12 @@ drawBoarderBox: function (ctx, x, y, width, height) {
     ctx.restore();
 },
 
-chatBoxText: function (w) {
+chatBoxText: function (ctx, w) {
     g_ctx.save();
     g_ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
-    util.drawBoarderBox(g_ctx, 0, 12*32, 20, 6);
-    util.writeText(g_ctx, w.substr(0,19).trim(), 1.5*32, 13.5*32, 3.5);
-    util.writeText(g_ctx, w.substr(19,19).trim(), 1.5*32, 15*32, 3.5);
+    util.drawBoarderBox(ctx, 0, 12*32, 20, 6);
+    util.writeText(ctx, w.substr(0,19).trim(), 1.5*32, 13.5*32, 3.5);
+    util.writeText(ctx, w.substr(19,19).trim(), 1.5*32, 15*32, 3.5);
     g_ctx.restore()
 },
 
