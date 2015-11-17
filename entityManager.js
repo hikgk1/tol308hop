@@ -274,7 +274,7 @@ battleRender: function(ctx) {
     if(this.battl===-1){  //Battle moves, pointerinn er renderaður í gegnum rattata, battle3 er bakrunnurinn í þessu statei
         g_sprites.battle3.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
 
-        util.writeText(ctx, g_PokemonList[this.id][0]+" lvl" +this.rattata.level, g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
+        util.writeText(ctx, g_PokemonList[this.id][0]+" lvl " +this.rattata.level, g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
         util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][1],g_canvas.width*0.375,g_canvas.height*0.745, 2);
         util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][2],g_canvas.width*0.375,g_canvas.height*0.80, 2);
         util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][3],g_canvas.width*0.375,g_canvas.height*0.855, 2);

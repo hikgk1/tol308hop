@@ -181,6 +181,7 @@ var g_sounds = {};
 function preloadSounds() {
     var requiredSounds = {
         palletTown : "./music/PalletTown.mp3",
+        viridian : "./music/viridian.mp3",
         route1 : "./music/Route1.mp3",
         battle : "./music/Battle.mp3"
     }

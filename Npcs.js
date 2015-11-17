@@ -34,6 +34,7 @@ function Npc(descr) {
     this._isTalking = false;
     this._stepsRemain = 0;
     this._stepsTillFight = Math.floor(util.randRange(4, 15));
+    this._battleTransition = false;
     this._oneTileTime = 0.4;
     this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
 
@@ -67,15 +68,34 @@ Npc.prototype.update = function (du) {
 
     if(this._isDeadNow) return entityManager.KILL_ME_NOW;
 
-    if(this.cy === -112) {
+    if(this._battleTransition) {
+        if(this._animTimer < 0) {
+            g_inBattle = true;
+            this._battleTransition = false;
+            this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
+        } else {
+            this._animTimer -= du;
+        }
+        return;
+    }
+
+    if(this.cy === -112 || this.cy === -1104) {
         g_sounds.palletTown.pause();
+        g_sounds.viridian.pause();
         g_sounds.route1.play();
-        g_sounds.palletTown.currentTime = 0;
+        g_sounds.palletTown.currentTime = 1;
+        g_sounds.viridian.currentTime = 0;
     }
 
     if(this.cy === 16) {
         g_sounds.route1.pause();
         g_sounds.palletTown.play();
+        g_sounds.route1.currentTime = 0;
+    }
+
+    if(this.cy === -1264) {
+        g_sounds.route1.pause();
+        g_sounds.viridian.play();
         g_sounds.route1.currentTime = 0;
     }
 
@@ -86,12 +106,14 @@ Npc.prototype.update = function (du) {
 
     if(this._stepsTillFight <= 0 &&
        this._isMoving === false) {
-        g_inBattle = true;
+        this._battleTransition = true;
+        this._animTimer = 2.5 * SECS_TO_NOMINALS;
         this._stepsTillFight = Math.floor(util.randRange(4, 15));
         g_sounds.palletTown.pause();
-        g_sounds.palletTown.currentTime = 0;
+        g_sounds.palletTown.currentTime = 1;
         g_sounds.route1.pause();
         g_sounds.route1.currentTime = 0;
+        g_sounds.battle.currentTime = 0.8;
         g_sounds.battle.play();
         return;
     }
@@ -214,7 +236,7 @@ Npc.prototype.computeSubStep = function (du) {
 };
 
 Npc.prototype.move = function (udlr) {
-    console.log((this.cx-16)/32,(-this.cy+560)/32);
+    //console.log((this.cx-16)/32,(-this.cy+560)/32);
 	
     this._scale = Math.abs(this._scale);
 	this.prevGrass = this.inGrass;
@@ -228,7 +250,9 @@ Npc.prototype.move = function (udlr) {
 			}
 			break;
 			} 
-            if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) { return;}
+            if(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale))) {
+                return;
+            }
 			var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale));
             if(inWay === 1) { return;}
             //for grass animation
@@ -247,7 +271,9 @@ Npc.prototype.move = function (udlr) {
 				}
 				break;
 			} 
-            if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) return;
+            if(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale))) {
+                return;
+            }
             var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale));
 			if(inWay === 1 || inWay === 3) { return;}
             //for grass animation
@@ -333,6 +359,22 @@ Npc.prototype.talkTo = function (npc) {
 };
 
 Npc.prototype.render = function (ctx) {
+        if(this._battleTransition && this.isMainChar) {
+            g_ctx.save();
+            g_ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+            for(var i = 0; i < g_canvas.height+64; i+=128) {
+                for(var j = 0; j < g_canvas.height; j+=64) {
+                    if((150-this._animTimer)*4 >= j) util.fillBox(ctx, i, j, 64, 64, "black");
+                }
+            }
+            for(var i = 64; i < g_canvas.height+64; i+=128) {
+                for(var j = g_canvas.height; j >= 0; j-=64) {
+                    if((150-this._animTimer)*4 >= g_canvas.height-j) util.fillBox(ctx, i, j, 64, -64, "black");
+                }
+            }
+            g_ctx.restore();
+        }
+
 		var origScale = this.sprite.scale;
 		var direction;
 		if(this._dir === 3) direction = 2;
