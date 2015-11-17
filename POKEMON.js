@@ -157,11 +157,18 @@ function requestPreloads() {
         battle3: "./sheets/Battle3.png",
         battle4: "./sheets/Battle4.png",
         pointer: "./sheets/Pointer.png",
-        rattattack: "./sheets/ratattack.png",
+        rattattack: "./sheets/RatAttack.png",
         font: "./sheets/font.png",
 		grasspatch: "./sheets/grasspatch.png",
 		pokelab: "./sheets/pokelab.png",
-        boarder: "./sheets/boxboarder.png"
+        boarder: "./sheets/boxboarder.png",
+        picafront: "./sheets/picafront.png",
+        catterpiefront: "./sheets/catterpiefront.png",
+        catterpieback: "./sheets/catterpieback.png",
+        pidgeyfront: "./sheets/pidgeyfront.png",
+        pidgeyback: "./sheets/pidgeyback.png",
+        rattataback: "./sheets/rattataback.png"
+
     };
 
     imagesPreload(requiredImages, g_images, preloadSounds);

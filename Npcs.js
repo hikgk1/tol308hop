@@ -86,7 +86,6 @@ Npc.prototype.update = function (du) {
 
     if(this._stepsTillFight <= 0 &&
        this._isMoving === false) {
-        entityManager.generateEnemy();
         g_inBattle = true;
         this._stepsTillFight = Math.floor(util.randRange(4, 15));
         g_sounds.palletTown.pause();

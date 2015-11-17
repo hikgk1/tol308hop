@@ -157,7 +157,6 @@ chatBoxText: function (w) {
 randomNum: function(min,max){
     var num = min + (Math.random()*max);
     num=Math.floor(num);
-    console.log(num);
     return num;
 }
 

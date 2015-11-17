@@ -15,7 +15,7 @@ with suitable 'data' and 'methods'.
 // (plusplus).
 //
 /*jslint nomen: true, white: true, plusplus: true*/
-
+//  TODO!: gera animation fyrir pokekúlu menu og velja pokemon menu, klára að bugfixa ef þeir deija, gera kerfið fallegra
 var entityManager = {
 
 // "PRIVATE" DATA
@@ -23,10 +23,12 @@ step: 0,
 battl: 0,
 move: "",
 rattata: 0,
-picachu: 0,
+picachu: [],
 id: 0,
-Playerid: 0,
+Playerid: [0],
+i:0,
 poke_img: [],
+poke_imgF: [],
 _npcs    : [],
 enemyMove: 0,
 
@@ -119,6 +121,7 @@ nextStep: function(){
 },
 
 act: function(){
+    console.log(this.i)
         if(this.battl===2) {
             g_inBattle = false;
             g_sounds.battle.pause();
@@ -127,7 +130,6 @@ act: function(){
             this.step = 0;
             this.battl = 0;
             this.move = "";
-            this.rattata.health = 60;
             return;
         }
 
@@ -139,67 +141,81 @@ act: function(){
         }
 
         if(this.battl===4){ //rattata attacks
-            this.picachu.health -= g_PokemonList[this.Playerid][this.enemyMove+4]*this.rattata.level;
+            if(g_PokemonList[this.id][this.enemyMove+4]!=0) this.picachu[this.i].health -= g_PokemonList[this.id][this.enemyMove+4]+this.rattata.level*2;
             this.battl=1
-            this.picachu.isDead();
+            this.picachu[this.i].isDead();
             return;
         }
 
         if(this.battl===-1){ // bardaga move
             var pos = this.rattata.getPos()  //Sæki pos á pointer til að vita hvaða move er valið
             if(pos===g_canvas.height*0.725){
-                this.rattata.health -= g_PokemonList[this.Playerid][5]*this.picachu.level;
-                this.move=g_PokemonList[this.Playerid][1];
+                if(g_PokemonList[this.Playerid[this.i]][5]!=0) this.rattata.health -= g_PokemonList[this.Playerid[this.i]][5]+this.picachu[this.i].level*2.5;
+                this.move=g_PokemonList[this.Playerid[this.i]][1];
             }
 
             if(pos===g_canvas.height*0.78){
-                this.rattata.health -= g_PokemonList[this.Playerid][6]*this.picachu.level;
-                this.move= g_PokemonList[this.Playerid][2];
+                if(g_PokemonList[this.Playerid[this.i]][6]!=0) this.rattata.health -= g_PokemonList[this.Playerid[this.i]][6]+this.picachu[this.i].level*2.5;
+                this.move= g_PokemonList[this.Playerid[this.i]][2];
             }
 
             if(pos===g_canvas.height*0.83){
-                this.rattata.health -= g_PokemonList[this.Playerid][7]*this.picachu.level;
-                this.move=g_PokemonList[this.Playerid][3];
+                if(g_PokemonList[this.Playerid[this.i]][7]!=0) this.rattata.health -= g_PokemonList[this.Playerid[this.i]][7]+this.picachu[this.i].level*2.5;
+                this.move=g_PokemonList[this.Playerid[this.i]][3];
             }
 
             if(pos===g_canvas.height*0.885){
-                this.rattata.health -= g_PokemonList[this.Playerid][8]*this.picachu.level;
-                this.move=g_PokemonList[this.Playerid][4];
+                if(g_PokemonList[this.Playerid[this.i]][8]!=0) this.rattata.health -= g_PokemonList[this.Playerid[this.i]][8]+this.picachu[this.i].level*2.5;
+                this.move=g_PokemonList[this.Playerid[this.i]][4];
             }
 
             this.battl=3;  //Hoppum í picachu attacks
         }
 
         if(this.battl===1){ // menu
-            var pos = this.picachu.getPos()  //Sæki pos á pointer til að vita hvað við ætlum að gera
+            var pos = this.picachu[0].getPos()  //Sæki pos á pointer til að vita hvað við ætlum að gera
 
             if(pos[0]===g_canvas.width*0.7425 && pos[1]===g_canvas.height*0.87) this.battl=2 //run valið
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.7625) this.battl=-1;  //Fight valið, hoppum í bardaga moves gluggann
             if(pos[0]===g_canvas.width*0.7425 && pos[1]===g_canvas.height*0.7625) {  //PKMN valið
-                console.log("Ekki með í demo");
-                this.rattata = new Rattata(g_images.pica);
-                this.battl=1;  //Höldum áfram í menu
+                console.log("Skiptum í næsta pokemon");
+                if(this.i==this.Playerid.length-1) this.i=0;
+                else this.i+=1
+                g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
+
+                this.battl=3; 
             }
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.87) {  // ITEM valið
-                console.log("Ekki með í demo");
-                this.battl=1;  //Höldum áfram í menu
+                console.log("Kastar Poke kúlu");
+                if(this.Playerid.length==7){
+                    console.log("Má bara hafa 6 pokemona");
+                    this.battl=1;  //Höldum áfram í menu
+                    return;
+                }
+                this.picachu.push(new Picachu(this.poke_imgF[this.id],{health:this.rattata.health+this.rattata.level*30
+                    ,level:this.rattata.level, scale:(this.rattata.health+this.rattata.level*30)/200}))
+                this.i +=1;
+                this.Playerid[this.i]=this.id;
+                this.battl=3; 
             }
         }
 },
 generateEnemy: function() {
-        this.poke_img=[g_images.pica,g_images.rat];
-        this.id=util.randomNum(0,this.poke_img.length-1);
+        this.poke_img=[g_images.picafront,g_images.rat,g_images.pidgeyfront,g_images.catterpiefront];
+        this.id=util.randomNum(0,this.poke_img.length);
+        console.log(this.id);
         this.rattata = new Rattata(this.poke_img[this.id]);
 
 },
 
 generatePokemon : function() {
+        this.poke_imgF=[g_images.pica,g_images.rattataback,g_images.pidgeyback,g_images.catterpieback]
         this.generateEnemy();
-        this.picachu = new Picachu(g_images.pica);
+        this.picachu.push(new Picachu(this.poke_imgF[0]));
 },
 
 battleUpdate: function(du) {
-        this.picachu.update(du);  //Update picachu
+        this.picachu[this.i].update(du);  //Update picachu
         this.rattata.update(du);  //Update rattata
 },
 
@@ -210,29 +226,29 @@ battleRender: function(ctx) {
     }
 
     if(this.step>=1){//Rendera rattata
-        g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
+        g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
         this.rattata.render(ctx);
     }
 
     if(this.step>=2){//Næsta umhverfi
-        g_sprites.battle2.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        util.writeText(ctx, g_PokemonList[this.id][0], g_canvas.width*0.07,g_canvas.height*0.09, 1.5)
+        g_sprites.battle2.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
+        util.writeText(ctx, g_PokemonList[this.id][0]+" lvl "+this.rattata.level, g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
         this.rattata.render(ctx);
     }
 
     if(this.battl===1){ //Grunnurinn í bardaganum, erum í menu með battle2 í bakrun, pointerinn er renderaður í gegnum picachu
-        this.picachu.render(ctx);
+        this.picachu[this.i].render(ctx);
         this.rattata.render(ctx);
     }
 
     if(this.battl===-1){  //Battle moves, pointerinn er renderaður í gegnum rattata, battle3 er bakrunnurinn í þessu statei
-        g_sprites.battle3.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
+        g_sprites.battle3.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
 
-        util.writeText(ctx, g_PokemonList[this.id][0], g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
-        util.writeText(ctx, g_PokemonList[this.Playerid][1],g_canvas.width*0.375,g_canvas.height*0.745, 2);
-        util.writeText(ctx, g_PokemonList[this.Playerid][2],g_canvas.width*0.375,g_canvas.height*0.80, 2);
-        util.writeText(ctx, g_PokemonList[this.Playerid][3],g_canvas.width*0.375,g_canvas.height*0.855, 2);
-        util.writeText(ctx, g_PokemonList[this.Playerid][4],g_canvas.width*0.375,g_canvas.height*0.91, 2);
+        util.writeText(ctx, g_PokemonList[this.id][0]+" lvl" +this.rattata.level, g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
+        util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][1],g_canvas.width*0.375,g_canvas.height*0.745, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][2],g_canvas.width*0.375,g_canvas.height*0.80, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][3],g_canvas.width*0.375,g_canvas.height*0.855, 2);
+        util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][4],g_canvas.width*0.375,g_canvas.height*0.91, 2);
 
         this.rattata.render(ctx);
     }
@@ -244,15 +260,17 @@ battleRender: function(ctx) {
 
     if(this.battl===3){//Picachu gerir árás
         g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height)
-        util.writeText(ctx, g_PokemonList[this.Playerid][0]+" uses " + this.move, g_canvas.width*0.1,g_canvas.height*0.8, 2);
-        this.picachu.render(ctx);
+        util.writeText(ctx, g_PokemonList[this.id][0]+" lvl "+this.rattata.level, g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
+        util.writeText(ctx, g_PokemonList[this.Playerid[this.i]][0]+" uses " + this.move, g_canvas.width*0.1,g_canvas.height*0.8, 2);
+        this.picachu[this.i].render(ctx);
         this.rattata.render(ctx);
     }
 
     if(this.battl===4){//Rattata gerir árás
         g_sprites.rattattack.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
-        util.writeText(ctx, g_PokemonList[this.id][0]+" uses "+g_PokemonList[this.id][this.enemyMove],g_canvas.width*0.1,g_canvas.height*0.8, 2);
-        this.picachu.render(ctx);
+        util.writeText(ctx, g_PokemonList[this.id][0]+" lvl "+this.rattata.level, g_canvas.width*0.07,g_canvas.height*0.09, 1.5);
+        util.writeText(ctx, "enemy " + g_PokemonList[this.id][0]+" uses "+g_PokemonList[this.id][this.enemyMove],g_canvas.width*0.1,g_canvas.height*0.8, 2);
+        this.picachu[this.i].render(ctx);
         this.rattata.render(ctx);
     }
 },
