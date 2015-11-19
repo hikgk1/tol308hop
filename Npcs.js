@@ -32,6 +32,8 @@ function Npc(descr) {
     this._isMoving = false;
     this._isJumping = false;
     this._isTalking = false;
+    this._inMenu = false;
+    this._inPokeMenu = false;
     this._stepsRemain = 0;
     this._stepsTillFight = Math.floor(util.randRange(4, 15));
     this._battleTransition = false;
@@ -46,6 +48,14 @@ function Npc(descr) {
     this.tmpY = this.cy;
 	
 	this.prevGrass = false;
+
+    this._menu = {
+        opt : [
+               {txt : "Pokemon", update : function () {entityManager._npcs[0]._inPokeMenu = !entityManager._npcs[0]._inPokeMenu}},
+               {txt : "Cancel", update : function () {entityManager._npcs[0]._inMenu = false; entityManager._npcs[0]._menu.pointer = 0}}
+              ],
+        pointer : 0
+    }
 };
 
 Npc.prototype = new Entity();
@@ -56,6 +66,7 @@ Npc.prototype.KEY_LEFT   = 'A'.charCodeAt(0);
 Npc.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 Npc.prototype.KEY_ACTION   = ' '.charCodeAt(0);
+Npc.prototype.KEY_MENU = '\r'.charCodeAt(0);
 
 // Initial, inheritable, default values
 Npc.prototype.cx = 208;
@@ -67,6 +78,25 @@ Npc.prototype.update = function (du) {
     spatialManager.unregister(this);
 
     if(this._isDeadNow) return entityManager.KILL_ME_NOW;
+
+    if(this._inMenu) {
+        if(eatKey(this.KEY_MENU) || eatKey(this.KEY_ACTION)) {
+            this._menu.opt[this._menu.pointer].update();
+        }
+
+        if(this._inPokeMenu) return;
+
+        if(eatKey(this.KEY_DOWN)) {
+            if(this._menu.pointer < this._menu.opt.length-1) this._menu.pointer += 1;
+            return;
+        }
+
+        if(eatKey(this.KEY_UP)) {
+            if(this._menu.pointer > 0) this._menu.pointer -= 1;
+            return;
+        }
+        return;
+    }
 
     if(this._battleTransition) {
         if(this._animTimer < 0) {
@@ -213,6 +243,11 @@ Npc.prototype.moveToTarget = function (du) {
 
 Npc.prototype.computeSubStep = function (du) {
     if(this._isMoving) return;
+
+    if(eatKey(this.KEY_MENU)) {
+        this._inMenu = true;
+        return;
+    }
 	
     if(eatKey(this.KEY_DOWN)) {
         this.move(0);
@@ -358,10 +393,37 @@ Npc.prototype.talkTo = function (npc) {
     this._isTalking = true;
 };
 
+Npc.prototype.drawMenu = function (ctx) {
+    ctx.save();
+    ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+    util.drawBoarderBox(ctx, g_canvas.width-(8*32), 64, 8, 12);
+    ctx.translate(g_canvas.width-(8*32), 112);
+    for(var i = 0; i < this._menu.opt.length; i++) {
+        util.writeText(ctx, this._menu.opt[i].txt, 64, i*48, 3);
+    }
+    g_sprites.pointer.drawAtSize(ctx, 32, this._menu.pointer*48-5, 20, 30);
+    ctx.restore();
+}
+
+Npc.prototype.drawPokeMenu = function (ctx) {
+    ctx.save();
+    ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+    util.drawBoarderBox(ctx, 0, 0, 20, 18);
+    ctx.translate(64, 64);
+    util.writeText(ctx, g_PokemonList[entityManager.Playerid[0]][0], 0, 0, 3);
+    util.writeText(ctx, ""+entityManager.picachu[0].health + " - " + (100+entityManager.picachu[0].level*30), 256, 0, 3);
+    for(var i = 1; i < entityManager.Playerid.length; i++) {
+        util.writeText(ctx, g_PokemonList[entityManager.Playerid[i]][0], 0, i*64, 3);
+        util.writeText(ctx, ""+entityManager.picachu[i].health + " - " + (40+entityManager.picachu[i].level*20), 256, i*64, 3);
+    }
+
+    ctx.restore();
+}
+
 Npc.prototype.render = function (ctx) {
         if(this._battleTransition && this.isMainChar) {
-            g_ctx.save();
-            g_ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+            ctx.save();
+            ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
             for(var i = 0; i < g_canvas.height+64; i+=128) {
                 for(var j = 0; j < g_canvas.height; j+=64) {
                     if((150-this._animTimer)*4 >= j) util.fillBox(ctx, i, j, 64, 64, "black");
@@ -372,7 +434,7 @@ Npc.prototype.render = function (ctx) {
                     if((150-this._animTimer)*4 >= g_canvas.height-j) util.fillBox(ctx, i, j, 64, -64, "black");
                 }
             }
-            g_ctx.restore();
+            ctx.restore();
         }
 
 		var origScale = this.sprite.scale;

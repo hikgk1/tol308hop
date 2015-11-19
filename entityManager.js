@@ -337,6 +337,14 @@ render: function(ctx) {
         }
         debugY += 10;
     }
+
+    if(this._npcs[0]._inMenu) {
+        this._npcs[0].drawMenu(ctx);
+    }
+
+    if(this._npcs[0]._inPokeMenu) {
+        this._npcs[0].drawPokeMenu(ctx);
+    }
 }
 
 }
