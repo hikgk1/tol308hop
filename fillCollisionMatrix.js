@@ -3,7 +3,7 @@
 
 
 "use strict";
-//Assign each spot with 0 for passable, 1 for obsticle, 2 for grass
+//Assign each spot with 0 for passable, 1 for obsticle, 2 for grass, 3 for one-way ledges
 
 function fillCollisionMatrix(x){
 	for (var i = -10; i <50; i++) {

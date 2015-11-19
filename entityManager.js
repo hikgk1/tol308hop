@@ -49,6 +49,10 @@ KILL_ME_NOW : -1,
 
 npcList : {
     mainChar : [
+                //[{x,y}standing anim, {x,y}walking anim]  on the sprite file
+                //First line facing down
+                //Second line facing up
+                //Third line facing left
                 [{ax : 324, ay : 36}, {ax : 306, ay : 162}],
                 [{ax : 324, ay : 54}, {ax : 306, ay : 180}],
                 [{ax : 306, ay : 144}, {ax : 306, ay : 198}]
@@ -60,15 +64,6 @@ npcList : {
            ]
 },
 
-obsticleList: {
-	obsticle1 : [
-            [{ax : 288, ay : 72}, {ax : 288, ay : 126}],
-            [{ax : 288, ay : 90}, {ax : 288, ay : 0}],
-            [{ax : 288, ay : 108}, {ax : 288, ay : 18}]
-           ]
-
-},
-
 // Some things must be deferred until after initial construction
 // i.e. thing which need `this` to be defined.
 //
@@ -77,7 +72,6 @@ deferredSetup : function () {
 },
 
 init: function() {
-    //entityManager.displayNpc(this.npcList.mainChar, 304, 272, true,false);
 	entityManager.displayNpc(this.npcList.mainChar, 240, 240, true,false);
     entityManager.displayNpc(this.npcList.npc1, 208, 240, false,false);
     entityManager.displayNpc(this.npcList.npc1, 176, -336, false,false);
@@ -200,7 +194,7 @@ act: function(){
             }
             if(pos[0]===g_canvas.width*0.4475 && pos[1]===g_canvas.height*0.87) {  // ITEM valið
                 console.log("Kastar Poke kúlu");
-                if(this.Playerid.length===7){
+                if(this.Playerid.length===6){
                     console.log("Má bara hafa 6 pokemona");
                     return;
                 }
@@ -214,7 +208,7 @@ act: function(){
                 }
                 this.picachu.push(new Picachu(this.poke_imgF[this.id],{health:40+this.rattata.level*20
                     ,level:this.rattata.level, scale:(40+this.rattata.level*20)/200}))
-                this.Playerid[this.i+1]=this.id;
+                this.Playerid.push(this.id);
                 console.log("Hann náðist!")
                 this.generateEnemy();
                 g_inBattle = false;
@@ -326,18 +320,15 @@ update: function(du) {
 },
 
 render: function(ctx) {
-    var debugX = 10, debugY = 100;
-
     for (var c = 0; c < this._categories.length; ++c) {
         var aCategory = this._categories[c];
 
         for (var i = 0; i < aCategory.length; ++i) {
             aCategory[i].render(ctx);
-            //debug.text(".", debugX + i * 10, debugY);
         }
-        debugY += 10;
     }
 
+    //Unfortunate side-effect of having the main char an npc is that this needs to be drawn here, so that the other npcs don't get drawn over the menus
     if(this._npcs[0]._inMenu) {
         this._npcs[0].drawMenu(ctx);
     }
