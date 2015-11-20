@@ -32,12 +32,10 @@ function Npc(descr) {
     this._isMoving = false;
     this._isJumping = false;
     this._isTalking = false;
-    this._inMenu = false;
-    this._inPokeMenu = false;
     this._stepsRemain = 0;
     this._stepsTillFight = Math.floor(util.randRange(4, 15));
     this._battleTransition = false;
-    this._oneTileTime = 0.4;    //How long it should take to walk 1 tile, in seconds
+    this._oneTileTime = 0.4;
     this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
 
     this.oldX = this.cx;
@@ -48,16 +46,6 @@ function Npc(descr) {
     this.tmpY = this.cy;
 	
 	this.prevGrass = false;
-
-    this._menu = {
-        opt : [
-               //element txt : The name of the menu option
-               //        update : function that is performed when option is selected
-               {txt : "Pokemon", update : function () {entityManager._npcs[0]._inPokeMenu = !entityManager._npcs[0]._inPokeMenu}},
-               {txt : "Cancel", update : function () {entityManager._npcs[0]._inMenu = false; entityManager._npcs[0]._menu.pointer = 0}}
-              ],
-        pointer : 0
-    }
 };
 
 Npc.prototype = new Entity();
@@ -68,11 +56,11 @@ Npc.prototype.KEY_LEFT   = 'A'.charCodeAt(0);
 Npc.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 Npc.prototype.KEY_ACTION   = ' '.charCodeAt(0);
-Npc.prototype.KEY_MENU = '\r'.charCodeAt(0);
 
 // Initial, inheritable, default values
 Npc.prototype.cx = 208;
 Npc.prototype.cy = 208;
+//Npc.prototype.numSubSteps = 1;
 Npc.prototype.isMainChar = false;
     
 Npc.prototype.update = function (du) {
@@ -80,11 +68,36 @@ Npc.prototype.update = function (du) {
 
     if(this._isDeadNow) return entityManager.KILL_ME_NOW;
 
-    if(this._inMenu && this.menuUpdate()) return;
+    if(this._battleTransition) {
+        if(this._animTimer < 0) {
+            g_inBattle = true;
+            this._battleTransition = false;
+            this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
+        } else {
+            this._animTimer -= du;
+        }
+        return;
+    }
 
-    if(this._battleTransition && this.transitionUpdate(du)) return;
+    if(this.cy === -112 || this.cy === -1104) {
+        g_sounds.palletTown.pause();
+        g_sounds.viridian.pause();
+        g_sounds.route1.play();
+        g_sounds.palletTown.currentTime = 1;
+        g_sounds.viridian.currentTime = 0;
+    }
 
-    this.updateMusic();
+    if(this.cy === 16) {
+        g_sounds.route1.pause();
+        g_sounds.palletTown.play();
+        g_sounds.route1.currentTime = 0;
+    }
+
+    if(this.cy === -1264) {
+        g_sounds.route1.pause();
+        g_sounds.viridian.play();
+        g_sounds.route1.currentTime = 0;
+    }
 
     if(this.targetX !== this.cx ||
        this.targetY !== this.cy) {
@@ -105,8 +118,6 @@ Npc.prototype.update = function (du) {
         return;
     }
 
-    //Check if standing on one-way ledge
-    //If so, jump down to next tile
     if(spatialManager.findNonEntityInRange(this.cx, this.cy) === 3) {
         this.move(0);
         this._isJumping = true;
@@ -133,7 +144,6 @@ Npc.prototype.setScale = function (scale) {
     this._scale = scale;
 };
 
-//Move character towards their targetX, targetY
 Npc.prototype.moveToTarget = function (du) {
     var ratio = du / (this._oneTileTime * SECS_TO_NOMINALS);
     if(this._animTimer > 0.55 * this._oneTileTime * SECS_TO_NOMINALS &&
@@ -168,8 +178,6 @@ Npc.prototype.moveToTarget = function (du) {
     }
 
     this._animTimer -= du;
-    //Movement should only take _animTimer long
-    //If time is up make sure the character is in the right spot, (re)set variables
     if(this._animTimer < 0) {
         this.cx = this.targetX;
         this.cy = this.targetY;
@@ -203,14 +211,8 @@ Npc.prototype.moveToTarget = function (du) {
     }
 };
 
-//Check for inputs and perform appropriate action
 Npc.prototype.computeSubStep = function (du) {
     if(this._isMoving) return;
-
-    if(eatKey(this.KEY_MENU)) {
-        this._inMenu = true;
-        return;
-    }
 	
     if(eatKey(this.KEY_DOWN)) {
         this.move(0);
@@ -233,10 +235,6 @@ Npc.prototype.computeSubStep = function (du) {
     }
 };
 
-//udlr = 0 : down
-//       1 : up
-//       2 : left
-//       3 : right
 Npc.prototype.move = function (udlr) {
     //console.log((this.cx-16)/32,(-this.cy+560)/32);
 	
@@ -256,10 +254,6 @@ Npc.prototype.move = function (udlr) {
                 return;
             }
 			var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy+(16 * this._scale));
-            //inWay = 0 : nothing
-            //        1 : wall
-            //        2 : grass
-            //        3 : one-way ledge
             if(inWay === 1) { return;}
             //for grass animation
             if(inWay === 2) { 
@@ -281,10 +275,6 @@ Npc.prototype.move = function (udlr) {
                 return;
             }
             var inWay = spatialManager.findNonEntityInRange(this.cx, this.cy-(16 * this._scale));
-            //inWay = 0 : nothing
-            //        1 : wall
-            //        2 : grass
-            //        3 : one-way ledge
 			if(inWay === 1 || inWay === 3) { return;}
             //for grass animation
 			if(inWay === 2) { 
@@ -304,10 +294,6 @@ Npc.prototype.move = function (udlr) {
 			} 
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
-            //inWay = 0 : nothing
-            //        1 : wall
-            //        2 : grass
-            //        3 : one-way ledge
 			if(inWay === 1 || inWay === 3) { return;}
             //for grass animation
 			if(inWay === 2) { 
@@ -329,10 +315,6 @@ Npc.prototype.move = function (udlr) {
 			} 
             if(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, -(8 * this._scale))) return;
             var inWay = spatialManager.findNonEntityInRange(this.cx-(16 * this._scale), this.cy);
-            //inWay = 0 : nothing
-            //        1 : wall
-            //        2 : grass
-            //        3 : one-way ledge
 			if(inWay === 1 || inWay === 3) { return;}
             else if(inWay === 3) { return;}
 			//for grass animation
@@ -352,7 +334,6 @@ Npc.prototype.moveMult = function (udlr, nr) {
     this._stepsRemain = nr;
 };
 
-//Check if action button, try to talk to whatever is in front
 Npc.prototype.maybeAction = function () {
     if (eatKey(this.KEY_ACTION)) {
         if(this._isTalking === false) {
@@ -377,94 +358,10 @@ Npc.prototype.talkTo = function (npc) {
     this._isTalking = true;
 };
 
-Npc.prototype.drawMenu = function (ctx) {
-    ctx.save();
-    ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
-    util.drawBoarderBox(ctx, g_canvas.width-(8*32), 64, 8, 12);
-    ctx.translate(g_canvas.width-(8*32), 112);
-    for(var i = 0; i < this._menu.opt.length; i++) {
-        util.writeText(ctx, this._menu.opt[i].txt, 64, i*48, 3);
-    }
-    g_sprites.pointer.drawAtSize(ctx, 32, this._menu.pointer*48-5, 20, 30);
-    ctx.restore();
-};
-
-Npc.prototype.drawPokeMenu = function (ctx) {
-    ctx.save();
-    ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
-    util.drawBoarderBox(ctx, 0, 0, 20, 18);
-    ctx.translate(64, 64);
-    util.writeText(ctx, g_PokemonList[entityManager.Playerid[0]][0], 0, 0, 3);
-    if(entityManager.picachu[0].health > 0) util.writeText(ctx, ""+entityManager.picachu[0].health + " - " + (100+entityManager.picachu[0].level*30), 256, 0, 3);
-    else util.writeText(ctx, "Fainted", 256, 0, 3);
-    for(var i = 1; i < entityManager.Playerid.length; i++) {
-        util.writeText(ctx, g_PokemonList[entityManager.Playerid[i]][0], 0, i*64, 3);
-        if(entityManager.picachu[i].health > 0) util.writeText(ctx, ""+entityManager.picachu[i].health + " - " + (40+entityManager.picachu[i].level*20), 256, i*64, 3);
-        else util.writeText(ctx, "Fainted", 256, i*64, 3);
-    }
-
-    ctx.restore();
-};
-
-Npc.prototype.menuUpdate = function () {
-    if(eatKey(this.KEY_MENU) || eatKey(this.KEY_ACTION)) {
-            this._menu.opt[this._menu.pointer].update();
-        }
-
-        if(this._inPokeMenu) return true;
-
-        if(eatKey(this.KEY_DOWN)) {
-            if(this._menu.pointer < this._menu.opt.length-1) this._menu.pointer += 1;
-            return true;
-        }
-
-        if(eatKey(this.KEY_UP)) {
-            if(this._menu.pointer > 0) this._menu.pointer -= 1;
-            return true;
-        }
-        return true;
-};
-
-Npc.prototype.transitionUpdate = function (du) {
-    if(this._animTimer < 0) {
-            g_inBattle = true;
-            this._battleTransition = false;
-            this._animTimer = this._oneTileTime * SECS_TO_NOMINALS;
-        } else {
-            this._animTimer -= du;
-        }
-        return true;
-};
-
-Npc.prototype.updateMusic = function () {
-    //Going from pallet/viridian to route 1
-    if(this.cy === -112 || this.cy === -1104) {
-        g_sounds.palletTown.pause();
-        g_sounds.viridian.pause();
-        g_sounds.route1.play();
-        g_sounds.palletTown.currentTime = 1;
-        g_sounds.viridian.currentTime = 0;
-    }
-
-    //Going from route 1 to pallet
-    if(this.cy === 16) {
-        g_sounds.route1.pause();
-        g_sounds.palletTown.play();
-        g_sounds.route1.currentTime = 0;
-    }
-
-    //Going from route 1 to viridian
-    if(this.cy === -1264) {
-        g_sounds.route1.pause();
-        g_sounds.viridian.play();
-        g_sounds.route1.currentTime = 0;
-    }
-};
-
 Npc.prototype.render = function (ctx) {
         if(this._battleTransition && this.isMainChar) {
-            ctx.save();
-            ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+            g_ctx.save();
+            g_ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
             for(var i = 0; i < g_canvas.height+64; i+=128) {
                 for(var j = 0; j < g_canvas.height; j+=64) {
                     if((150-this._animTimer)*4 >= j) util.fillBox(ctx, i, j, 64, 64, "black");
@@ -475,7 +372,7 @@ Npc.prototype.render = function (ctx) {
                     if((150-this._animTimer)*4 >= g_canvas.height-j) util.fillBox(ctx, i, j, 64, -64, "black");
                 }
             }
-            ctx.restore();
+            g_ctx.restore();
         }
 
 		var origScale = this.sprite.scale;
@@ -488,6 +385,8 @@ Npc.prototype.render = function (ctx) {
 		this.sprite.scale = origScale;
 
 		if ((this.inGrass && this.prevGrass) || (this.inGrass && !this._isMoving)) {
+			/*ctx.drawImage(g_images.grasspatch,this.targetX-16,this.targetY-16);
+			if(this.prevGrass) {  ctx.drawImage(g_images.grasspatch,this.oldX-16,this.oldY-16);}*/
             ctx.drawImage(g_images.grasspatch, this.cx-16, this.cy);
 		}
 };

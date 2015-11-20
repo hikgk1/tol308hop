@@ -26,6 +26,13 @@ Sprite.prototype.drawAt = function (ctx, x, y) {
                   x, y);
 };
 
+//til að gera sprite ur spritesheet "effects"
+Sprite.prototype.drawCropped = function (ctx, sx, sy, sw, sh, dx, dy, dw, dh) {
+	//sx, sy eru hnit a effects sheet,  sw sh width height a spritesheet
+	//dx,dy,dw,dh eru canvas hnit width height
+    ctx.drawImage(this.img, sx, sy, sw, sh, dx, dy, dw, dh);
+};
+
 Sprite.prototype.drawAtSize = function (ctx, x, y,z,w) {
     ctx.drawImage(this.image, 
                   x, y,z,w);

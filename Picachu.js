@@ -108,6 +108,8 @@ Picachu.prototype.getPos = function(){  //nota til að velja með pointer
 	return pos;
 }
 
+
+
 Picachu.prototype.render = function (ctx) {
     util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");
     util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");

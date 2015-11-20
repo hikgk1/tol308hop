@@ -1,4 +1,3 @@
-//Map for translating characters to ingame font drawing
 var g_font = [];
 
 g_font["A".charCodeAt(0)] = [0,1];
@@ -35,11 +34,11 @@ g_font["d".charCodeAt(0)] = [46,12];
 g_font["e".charCodeAt(0)] = [62,12];
 g_font["f".charCodeAt(0)] = [78,12];
 g_font["g".charCodeAt(0)] = [94,12];
-g_font["h".charCodeAt(0)] = [108,12];
-g_font["i".charCodeAt(0)] = [125,12];
+g_font["h".charCodeAt(0)] = [110,12];
+g_font["i".charCodeAt(0)] = [124,12];
 g_font["j".charCodeAt(0)] = [143,12];
 g_font["k".charCodeAt(0)] = [158,12];
-g_font["l".charCodeAt(0)] = [174,12];
+g_font["l".charCodeAt(0)] = [173,12];
 g_font["m".charCodeAt(0)] = [189,12];
 g_font["n".charCodeAt(0)] = [207,12];
 g_font["o".charCodeAt(0)] = [222,12];

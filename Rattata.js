@@ -33,6 +33,7 @@ Rattata.prototype.getPos = function(){  //nota til að velja með pointer
 Rattata.prototype.update = function (du) {
         if (eatKey(this.KEY_FIRE)) {  //Space bar navigatear í gegnum kerfið, next step fer í gegnum byrjunina og þegar að pointer kemur inn þá notum við act functionið
             if(entityManager.step === 0) g_PokemonList[entityManager.id][9].play();
+			
             if(entityManager.step === 2) g_PokemonList[entityManager.i][9].play();
             entityManager.nextStep();
 	   		if(entityManager.step>=4) entityManager.act();
