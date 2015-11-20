@@ -123,6 +123,16 @@ Npc.prototype.update = function (du) {
         this._stepsRemain -= 1;
     }
 
+    if(this.script !== undefined && !this._isMoving) {
+        if(this.script[0] === 0) {
+            this.moveMult(this.script[1], Math.abs((this.cx-this.script[2])/32));
+            this.script[0] = 1;
+        } else {
+            this.moveMult(this.script[3], Math.abs((this.cx-this.script[4])/32));
+            this.script[0] = 0;
+        }
+    }
+
     // Handle actions
     this.maybeAction();
 
@@ -348,6 +358,8 @@ Npc.prototype.move = function (udlr) {
 };
 
 Npc.prototype.moveMult = function (udlr, nr) {
+    if(udlr === 3) this._scale = -Math.abs(this._scale);
+    else this._scale = Math.abs(this._scale);
     this._dir = udlr;
     this._stepsRemain = nr;
 };
@@ -357,8 +369,10 @@ Npc.prototype.maybeAction = function () {
     if (eatKey(this.KEY_ACTION)) {
         if(this._isTalking === false) {
             if(this._dir === 0) {
+                this._scale = Math.abs(this._scale);
                 this.talkTo(spatialManager.findEntityInRange(this.cx, this.cy+(16 * this._scale), (8 * this._scale)));
             } else if (this._dir === 1) {
+                this._scale = Math.abs(this._scale);
                 this.talkTo(spatialManager.findEntityInRange(this.cx, this.cy-(16 * this._scale), (8 * this._scale)));
             } else if (this._dir === 2) {
                 this.talkTo(spatialManager.findEntityInRange(this.cx-(16 * this._scale), this.cy, (8 * this._scale)));
@@ -373,6 +387,7 @@ Npc.prototype.maybeAction = function () {
 
 Npc.prototype.talkTo = function (npc) {
     if(npc === undefined) return;
+    if(npc.chatText === undefined) return;
     this._chatText = npc.chatText;
     this._isTalking = true;
 };

@@ -30,7 +30,7 @@ KILL_ME_NOW : -1,
 
 npcList : {
     mainChar : [
-                //[{x,y}standing anim, {x,y}walking anim]  on the sprite file
+                //[{x,y}standing frame, {x,y}walking frame]  on the sprite file
                 //First line facing down
                 //Second line facing up
                 //Third line facing left
@@ -42,7 +42,27 @@ npcList : {
             [{ax : 288, ay : 72}, {ax : 288, ay : 126}],
             [{ax : 288, ay : 90}, {ax : 288, ay : 0}],
             [{ax : 288, ay : 108}, {ax : 288, ay : 18}]
-           ]
+           ],
+    npc2 : [
+            [{ax : 180, ay : 36}, {ax : 162, ay : 162}],
+            [{ax : 180, ay : 54}, {ax : 162, ay : 180}],
+            [{ax : 162, ay : 144}, {ax : 162, ay : 198}]
+           ],
+    npc3 : [
+            [{ax : 216, ay : 36}, {ax : 198, ay : 162}],
+            [{ax : 216, ay : 54}, {ax : 198, ay : 180}],
+            [{ax : 198, ay : 144}, {ax : 198, ay : 198}]
+           ],
+    oak : [
+           [{ax : 306, ay : 36}, {ax : 288, ay : 162}],
+           [{ax : 306, ay : 54}, {ax : 288, ay : 180}],
+           [{ax : 288, ay : 144}, {ax : 288, ay : 198}]
+          ],
+    invis : [
+             [{ax : 0, ay : 216}, {ax : 0, ay : 216}],
+             [{ax : 0, ay : 216}, {ax : 0, ay : 216}],
+             [{ax : 0, ay : 216}, {ax : 0, ay : 216}]
+            ]
 },
 
 // Some things must be deferred until after initial construction
@@ -53,19 +73,38 @@ deferredSetup : function () {
 },
 
 init: function() {
-	entityManager.displayNpc(this.npcList.mainChar, 240, 240, true,false);
-    entityManager.displayNpc(this.npcList.npc1, 208, 240, false,false);
-    entityManager.displayNpc(this.npcList.npc1, 176, -336, false,false);
-    entityManager.displayNpc(this.npcList.npc1, 496, -720, false,true);
-    entityManager.moveMultNpc(3, 2, 0);
+	this.generateNpcs();
     spatialManager.manageWallsAndGrass();
     this.generatePokemon();
-    entityManager._npcs[1].chatText = "WASD to move around";
-    entityManager._npcs[2].chatText = "Use the item to    capture pokemon";
-    entityManager._npcs[3].chatText = "Some more text";
 },
 
-displayNpc : function (spArr, cx, cy, mainChar,inGrass) {
+generateNpcs : function () {
+    entityManager.displayNpc(this.npcList.mainChar, 240, 240, true, false);
+    entityManager.displayNpc(this.npcList.npc1, 208, 240, false, false, "WASD to move around");
+    entityManager.displayNpc(this.npcList.npc1, 176, -336, false, false, "Use the item to    capture pokemon");
+    entityManager.displayNpc(this.npcList.npc1, 496, -720, false, true, "Some more text");
+    entityManager.displayNpc(this.npcList.oak, 1392, 48, false, false, "Welcome to the     world of Pokemon!");
+    entityManager.displayNpc(this.npcList.invis, 240, 272, false, false, "Welcome to         Pallet Town");
+    entityManager.displayNpc(this.npcList.invis, 112, 144, false, false, "Your home");
+    entityManager.displayNpc(this.npcList.invis, 368, 144, false, false, "Your neighbors        house");
+    entityManager.displayNpc(this.npcList.invis, 432, 400, false, false, "Oaks Poke-lab");
+    entityManager.displayNpc(this.npcList.invis, 304, -272, false, false, "Route 1");
+    entityManager.displayNpc(this.npcList.invis, 368, -1328, false, false, "Welcome to         Viridian City");
+    entityManager.displayNpc(this.npcList.invis, 240, -1712, false, false, "This is a sign");
+    entityManager.displayNpc(this.npcList.invis, 304, -2224, false, false, "No more content");
+    entityManager.displayNpc(this.npcList.invis, 560, -2032, false, false, "Viridian City Gym  Closed");
+    entityManager.displayNpc(this.npcList.npc2, 272, -2224, false, false, "No more content");
+    entityManager.displayNpc(this.npcList.npc3, 240, -2224, false, false, "No more content");
+    entityManager.displayNpc(this.npcList.npc1, 336, 464, false, false);
+
+    entityManager.moveMultNpc(3, 2, 0);
+    entityManager.moveMultNpc(14, 2, 0);
+    entityManager.moveMultNpc(15, 3, 0);
+
+    entityManager._npcs[16].script = [0, 3, 496, 2, 336];
+},
+
+displayNpc : function (spArr, cx, cy, mainChar, inGrass, text) {
     this._npcs.push(new Npc({
         _spr : spArr,
         _width : 16,
@@ -73,7 +112,8 @@ displayNpc : function (spArr, cx, cy, mainChar,inGrass) {
         isMainChar : mainChar,
         inGrass : inGrass,
         cx : cx,
-        cy : cy
+        cy : cy,
+        chatText : text
     }));
 },
 

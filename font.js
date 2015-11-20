@@ -69,4 +69,4 @@ g_font["9".charCodeAt(0)] = [277,26];
 g_font[" ".charCodeAt(0)] = [0,30];
 g_font["!".charCodeAt(0)] = [225,41];
 g_font["?".charCodeAt(0)] = [209,41];
-g_font["-".charCodeAt(0)] = [199,41];
+g_font["-".charCodeAt(0)] = [199,42];
