@@ -199,12 +199,17 @@ act: function(){ //Navigates through the stages of the combat
                 this.picachu.push(new Picachu(this.poke_imgF[this.id],{health:40+this.rattata.level*20
                     ,level:this.rattata.level, scale:(40+this.rattata.level*20)/200})) //create our new pokemon object
                 console.log("You cought it");
-                this.endBattle();
+                this.battl=11;
+                return;
             }
             if(pos==1){ //Cancel selected
                 this.battl=1;
                 return;
             }
+        }
+        if(this.battl==11){
+            this.endBattle();
+            return;
         }
         if(this.battl===-1){ // fight moves
             var pos = this.rattata.getPos()  //gets pos of pointer to decide which move is picked
@@ -380,6 +385,11 @@ battleRender: function(ctx) {
         util.writeText(ctx, "Pokeball", g_canvas.width-(7*32), 100, 2);
         util.writeText(ctx, "Cancel", g_canvas.width-(7*32), 140, 2);
         this.picachu[0].renderpointer1(ctx);
+    }
+    if(this.battl==11){//Pokemon captured
+        g_sprites.battle1.drawAtSize(ctx,0,0,g_canvas.width,g_canvas.height);
+        g_sprites.pokeball.drawAtSize(ctx,g_canvas.width*0.645,g_canvas.height*0.135,32,32);
+        util.writeText(ctx, "You cought "+g_PokemonList[this.id][0]+"!",g_canvas.width*0.1,g_canvas.height*0.8, 2);
     }
 },
 
