@@ -8,6 +8,8 @@ battl: 0,
 move: "",
 rattata: 0,
 picachu: [],
+visibleThunder : false,
+visibleAttack : false,
 id: 0,
 Playerid: [0],
 i:0,
@@ -161,18 +163,23 @@ act: function(){ //Navigates through the stages of the combat
             return;
         }
         if(this.battl==6){//Swap pokemon menu
+			var oldi = this.i;
             var pos = this.picachu[this.i].getPos(); //get pos of pointer
             if(this.picachu[pos].health>0){
                 this.i=pos;
+				
                 g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]);
                 g_PokemonList[this.Playerid[this.i]][9].play(); //Pokemon battlecry
+				this.picachu[this.i].xPosition = 75;
                 this.enemyMove=util.randomNum(1,3);
                 this.battl=7;
+				this.picachu[oldi].xPosition = -100;
                 return;
             }
             else return;
         }
         if(this.battl==7){ //Go selected pokemon!
+			this.picachu[this.i].xPosition = 75;
             this.battl=4;
             return;
         }
@@ -264,6 +271,7 @@ endBattle: function(){ //end battle function
                 g_sounds.route1.play();
                 this.step = 0;
                 this.battl = 0;
+				
                 this.move = "";
                 this.i=0;
                 g_sprites.picachu = new Sprite(this.poke_imgF[this.Playerid[this.i]]); //we always want to start witch picachu if we can
@@ -294,6 +302,7 @@ battleRender: function(ctx) {
         g_sprites.pokeball.drawAtSize(ctx,390+i*32,327,28,28); //draw pokeballs
         }
         util.writeText(ctx, "A wild " + g_PokemonList[this.id][0] + " appears", g_canvas.width*0.1,g_canvas.height*0.8, 2);
+			this.rattata.render(ctx); 
     }
 
     if(this.step===1){//Render enemy

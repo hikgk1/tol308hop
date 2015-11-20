@@ -23,6 +23,9 @@ function Rattata(img,descr) {
 Rattata.prototype.KEY_FIRE = ' '.charCodeAt(0);  //Space bar
 Rattata.prototype.health = 40+this.level*20;
 Rattata.prototype.scale = this.health/200;
+Rattata.prototype.xPosition = 700;
+Rattata.prototype.yPosition = 72;
+Rattata.prototype.dMovement = 5;
 }
 var c = [g_canvas.height*0.725, g_canvas.height*0.78, g_canvas.height*0.83, g_canvas.height*0.885];
 var p = 0; // y-cords for battle move
@@ -33,13 +36,23 @@ Rattata.prototype.getPos = function(){  //get pointer cords
 
 Rattata.prototype.update = function (du) {
         if (eatKey(this.KEY_FIRE)) {  //Space bar navigates through the combat
-            if(entityManager.step === 0) g_PokemonList[entityManager.id][9].play();//battlecry
-            if(entityManager.step === 2) g_PokemonList[entityManager.i][9].play();//battlecry
-            entityManager.nextStep();
+            if(entityManager.step === 1) entityManager.nextStep();
+            if(entityManager.step === 3) entityManager.nextStep();
+            
 	   		if(entityManager.step>=4) entityManager.act();//Battle starts and act() navigates
 
     }
-
+	
+	if (entityManager.battl == 0 && entityManager.step == 0) {
+		this.xPosition -= 5;
+		if (this.xPosition < 440) {
+			this.xPosition = 450;
+			entityManager.battl = 0;
+			entityManager.step = 1;
+			g_PokemonList[entityManager.id][9].play();
+		}
+	}
+	
 };
 
 Rattata.prototype.isDead = function(){
@@ -57,7 +70,7 @@ Rattata.prototype.render = function (ctx) {
     util.fillBox(ctx, g_canvas.width*0.1975 ,g_canvas.height*0.1375, 198, 10, "white");
     if(this.health > 0) util.fillBox(ctx, g_canvas.width*0.1975,g_canvas.height*0.1375, this.health/this.scale, 10, "black");    //Rattata healthbar
     }
-    g_sprites.rattata.drawAtSize(ctx,g_canvas.width*0.625,g_canvas.height*0.125,100,100);       //render rattata
+    g_sprites.rattata.drawAtSize(ctx,this.xPosition,this.yPosition,100,100);       //render rattata
 
     if(entityManager.battl==-1){   // battl=-1 þá erum við í battl move
      	g_sprites.pointer.drawAtSize(ctx,g_canvas.width*0.25,c[p],20,30); // draw pointer

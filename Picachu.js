@@ -16,6 +16,9 @@ function Picachu(img,descr) {
 Picachu.prototype.health = 100+Picachu.prototype.level*30;
 Picachu.prototype.scale = Picachu.prototype.health/200;
 Picachu.prototype.experience = 0;
+Picachu.prototype.xPosition = -100;
+Picachu.prototype.yPosition = 216;
+Picachu.prototype.dMovement = 5;
 }
 Picachu.prototype.KEY_W = 'W'.charCodeAt(0);
 Picachu.prototype.KEY_S  = 'S'.charCodeAt(0);
@@ -77,6 +80,22 @@ Picachu.prototype.update = function (du) {
         this.experience=this.experience-100*this.level;
         this.level+=1;
     }
+	
+	if (entityManager.battl == 0 && entityManager.step == 2) {
+		this.xPosition += 5;
+		if (this.xPosition > 85) {
+			this.xPosition = 75;
+			entityManager.battl = 1;
+			entityManager.step = 3;
+			g_PokemonList[entityManager.i][9].play();
+		}
+	}
+	
+	if (entityManager.battl == 2 || entityManager.battl == 8 || entityManager.battl == 9 || entityManager.battl == 11 ) {
+		this.xPosition = -100;
+	}
+	
+	
 };
 
 Picachu.prototype.isDead = function(){
@@ -130,7 +149,7 @@ Picachu.prototype.render = function (ctx) {
     util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");//health bar 
 	if(this.health > 0) util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, this.health/this.scale, 10, "black"); //health bar picachu
     util.writeText(ctx, g_PokemonList[entityManager.Playerid[entityManager.i]][0]+" lvl "+this.level, g_canvas.width*0.5425,g_canvas.height*0.4725, 1.5);
-    g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Render picachu
+    g_sprites.picachu.drawAtSize(ctx,this.xPosition,this.yPosition,g_canvas.width*0.25,g_canvas.height*0.25);       //Render picachu
     if(entityManager.battl==1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //if battl=1 render pointer
 };
 Picachu.prototype.renderpointer = function (ctx) {
