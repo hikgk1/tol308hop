@@ -155,6 +155,7 @@ act: function(){ //Navigates through the stages of the combat
                     this.battl=4;
                     return;
                 }
+                this.Playerid.push(this.id);
                 this.picachu.push(new Picachu(this.poke_imgF[this.id],{health:40+this.rattata.level*20
                     ,level:this.rattata.level, scale:(40+this.rattata.level*20)/200})) //create our new pokemon object
                 console.log("You cought it");
