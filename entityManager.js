@@ -8,6 +8,7 @@ with suitable 'data' and 'methods'.
 "Private" properties are denoted by an underscore prefix convention.
 */
 
+
 "use strict";
 
 // Tell jslint not to complain about my use of underscore prefixes (nomen),
