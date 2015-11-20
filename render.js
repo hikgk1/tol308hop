@@ -1,5 +1,5 @@
 // GENERIC RENDERING
-//no editing by me - alex
+
 var g_doClear = true;
 var g_doBox = false;
 var g_undoBox = false;

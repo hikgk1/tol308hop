@@ -68,7 +68,7 @@ Npc.prototype.KEY_LEFT   = 'A'.charCodeAt(0);
 Npc.prototype.KEY_RIGHT  = 'D'.charCodeAt(0);
 
 Npc.prototype.KEY_ACTION   = ' '.charCodeAt(0);
-Npc.prototype.KEY_MENU = '\r'.charCodeAt(0);
+Npc.prototype.KEY_MENU = 'G'.charCodeAt(0);
 
 // Initial, inheritable, default values
 Npc.prototype.cx = 208;
@@ -389,9 +389,9 @@ Npc.prototype.drawMenu = function (ctx) {
     ctx.restore();
 };
 
-Npc.prototype.drawPokeMenu = function (ctx) {
+Npc.prototype.drawPokeMenu = function (ctx,trans) {
     ctx.save();
-    ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
+    if(trans==1) ctx.translate(entityManager._npcs[0].cx-304,entityManager._npcs[0].cy-272);
     util.drawBoarderBox(ctx, 0, 0, 20, 18);
     ctx.translate(64, 64);
     util.writeText(ctx, g_PokemonList[entityManager.Playerid[0]][0], 0, 0, 3);

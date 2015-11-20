@@ -170,7 +170,9 @@ function requestPreloads() {
         pidgeyfront: "./sheets/pidgeyfront.png",
         pidgeyback: "./sheets/pidgeyback.png",
         rattataback: "./sheets/rattataback.png",
-		effects: "./sheets/effects.png"
+        pokeball: "./sheets/pokeball.png",
+        effects: "./sheets/effects.png"
+
     };
 
     imagesPreload(requiredImages, g_images, preloadSounds);
@@ -188,7 +190,7 @@ function preloadSounds() {
         rattata : "./sfx/rattata.mp3",
         pidgey : "./sfx/pidgey.mp3",
         caterpie : "./sfx/caterpie.mp3",
-		effects: "./sfx/effects.mp3"
+        effects: "./sfx/effects.mp3"
     }
 
     soundsPreload(requiredSounds, g_sounds, preloadDone)
@@ -207,7 +209,8 @@ function preloadDone() {
     g_sprites.rattattack = new Sprite(g_images.rattattack);
     g_sprites.font = new Sprite(g_images.font);
     g_sprites.boarder = new Sprite(g_images.boarder);
-	g_sprites.effects = new Sprite(g_images.effects);
+    g_sprites.pokeball = new Sprite(g_images.pokeball);
+    g_sprites.effects = new Sprite(g_images.effects);
 
     g_PokemonList[0][9] = g_sounds.pikachu;
     g_PokemonList[1][9] = g_sounds.rattata;

@@ -25,11 +25,12 @@ Rattata.prototype.health = 40+this.level*20;
 Rattata.prototype.scale = this.health/200;
 }
 var c = [g_canvas.height*0.725, g_canvas.height*0.78, g_canvas.height*0.83, g_canvas.height*0.885];
-var p = 0; // y-hnit
+var p = 0; // y-cords for battle move
 Rattata.prototype.getPos = function(){  //nota til að velja með pointer
-	var cy = c[p];
+    var cy = c[p];
 	return cy;
 }
+
 Rattata.prototype.update = function (du) {
         if (eatKey(this.KEY_FIRE)) {  //Space bar navigatear í gegnum kerfið, next step fer í gegnum byrjunina og þegar að pointer kemur inn þá notum við act functionið
             if(entityManager.step === 0) g_PokemonList[entityManager.id][9].play();
@@ -43,17 +44,8 @@ Rattata.prototype.update = function (du) {
 
 Rattata.prototype.isDead = function(){
     if(this.health<=0){
-        g_inBattle = false;
-        g_sounds.battle.pause();
-        g_sounds.battle.currentTime = 0;
-        g_sounds.route1.play();
-        entityManager.step = 0;
-        entityManager.battl = 0;
-        entityManager.move = "";
-        entityManager.generateEnemy();
         entityManager.picachu[entityManager.i].experience+=50+this.level*10;
-        entityManager.i=0;
-        g_sprites.picachu = new Sprite(entityManager.poke_imgF[entityManager.Playerid[entityManager.i]]);
+        entityManager.battl=8;
         return;
     }
     else return;               
@@ -68,7 +60,7 @@ Rattata.prototype.render = function (ctx) {
     g_sprites.rattata.drawAtSize(ctx,g_canvas.width*0.625,g_canvas.height*0.125,100,100);       //renderar rattata
 
     if(entityManager.battl==-1){   // battl=-1 þá erum við í battl move
-     	g_sprites.pointer.drawAtSize(ctx,g_canvas.width*0.25,c[p],20,30); // Teikna pointer
+     	g_sprites.pointer.drawAtSize(ctx,g_canvas.width*0.25,c[p],20,30); // draw pointer
         util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");
         util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");
         util.fillBox(ctx, g_canvas.width*0.585,g_canvas.height*0.525,
@@ -79,5 +71,6 @@ Rattata.prototype.render = function (ctx) {
         if(p===3) util.writeText(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625, 2);
 
     }
+
 
 };
