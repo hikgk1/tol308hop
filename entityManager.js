@@ -32,6 +32,7 @@ poke_imgF: [],
 _npcs    : [],
 enemyMove: 0,
 selectPokemon: false,
+effects: [],
 
 // "PRIVATE" METHODS
 
@@ -80,8 +81,8 @@ init: function() {
     entityManager.moveMultNpc(3, 2, 0);
     spatialManager.manageWallsAndGrass();
     this.generatePokemon();
-    entityManager._npcs[1].chatText = "This is a test";
-    entityManager._npcs[2].chatText = "This one can talk  as well";
+    entityManager._npcs[1].chatText = "WASD to move around";
+    entityManager._npcs[2].chatText = "Use the item to    capture pokemon";
     entityManager._npcs[3].chatText = "Some more text";
 },
 
