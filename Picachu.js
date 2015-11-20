@@ -33,8 +33,10 @@ var i = 0; // y-hnit
 
 
 Picachu.prototype.update = function (du) {
-        //i og j stýra hvar örin í menu er
-        // p stýrir hvar örin í attack moves er
+        //i and j control the menu pointer
+        //p controls attack move pointer
+        //k controls item menu pointer
+        //e controls swap pokemon pointer
     if (eatKey(this.KEY_A)) {
         if(entityManager.battl==1) j=0; //Uppdate pointer in menu
     }
@@ -48,7 +50,7 @@ Picachu.prototype.update = function (du) {
             e-=1;
             if(e==-1) e=entityManager.picachu.length-1;
         }
-        if(entityManager.battl==10){
+        if(entityManager.battl==10){ //Update pointer in item menu
             k-=1;
             if(k==-1) k=1;
         }
@@ -66,12 +68,12 @@ Picachu.prototype.update = function (du) {
             e+=1;
             if(e==entityManager.picachu.length) e=0;
         }
-        if(entityManager.battl==10){
+        if(entityManager.battl==10){ //Update pointer in item menu
             k+=1;
             if(k==2) k=0;
         }
     }    
-    if(this.experience >= 100*this.level){
+    if(this.experience >= 100*this.level){ //gain exp when we win combat, and level up when we reach milestones
         this.experience=this.experience-100*this.level;
         this.level+=1;
     }
@@ -85,18 +87,18 @@ Picachu.prototype.isDead = function(){
         while(c<l-1){
             if(i==l-1 && l>1) i=0;
             else i+=1
-            if(entityManager.picachu[i].health>0){
+            if(entityManager.picachu[i].health>0){ //if pokemon faints, next pokemon in the array is selected
                 entityManager.i=i
                 g_sprites.picachu = new Sprite(entityManager.poke_imgF[entityManager.Playerid[entityManager.i]]);
-                g_PokemonList[entityManager.Playerid[entityManager.i]][9].play();
-                this.enemyMove=util.randomNum(1,3); //ákveður attack move hjá enemy
+                g_PokemonList[entityManager.Playerid[entityManager.i]][9].play();//pokemon battlecry
+                this.enemyMove=util.randomNum(1,3); 
                 this.battl=7;
                 return;
         }
         c++;
         }
         c=0
-        while(c<l){
+        while(c<l){//if we have no pokemons left, all pokemon regenerate all health
             if(c==0){
                 entityManager.picachu[c].health=100+entityManager.picachu[c].level*30;
                 entityManager.picachu[c].scale=entityManager.picachu[c].health/200;
@@ -114,7 +116,7 @@ Picachu.prototype.isDead = function(){
     else return;               
 }
 
-Picachu.prototype.getPos = function(){  //nota til að velja með pointer
+Picachu.prototype.getPos = function(){  //to get pointer location
     if(entityManager.battl==6) return e;
     if(entityManager.battl==10) return k;
 	var cx = x[j];
@@ -124,12 +126,12 @@ Picachu.prototype.getPos = function(){  //nota til að velja með pointer
 }
 
 Picachu.prototype.render = function (ctx) {
-    util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");
-    util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");
-	if(this.health > 0) util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, this.health/this.scale, 10, "black"); //health bar hjá picachu
+    util.fillBox(ctx, g_canvas.width*0.58 ,g_canvas.height*0.52, 208, 15, "grey");//health bar
+    util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");//health bar 
+	if(this.health > 0) util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, this.health/this.scale, 10, "black"); //health bar picachu
     util.writeText(ctx, g_PokemonList[entityManager.Playerid[entityManager.i]][0]+" lvl "+this.level, g_canvas.width*0.5425,g_canvas.height*0.4725, 1.5);
-    g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Rendera picachu
-    if(entityManager.battl==1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //ef battl=1 þá teikna pointer
+    g_sprites.picachu.drawAtSize(ctx,g_canvas.width*0.1125,g_canvas.height*0.375,g_canvas.width*0.25,g_canvas.height*0.25);       //Render picachu
+    if(entityManager.battl==1) g_sprites.pointer.drawAtSize(ctx,x[j],y[i],20,30);  //if battl=1 render pointer
 };
 Picachu.prototype.renderpointer = function (ctx) {
     g_sprites.pointer.drawAtSize(ctx,g_canvas.width*0.05,d[e],20,30);

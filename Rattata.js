@@ -26,17 +26,17 @@ Rattata.prototype.scale = this.health/200;
 }
 var c = [g_canvas.height*0.725, g_canvas.height*0.78, g_canvas.height*0.83, g_canvas.height*0.885];
 var p = 0; // y-cords for battle move
-Rattata.prototype.getPos = function(){  //nota til að velja með pointer
+Rattata.prototype.getPos = function(){  //get pointer cords
     var cy = c[p];
 	return cy;
 }
 
 Rattata.prototype.update = function (du) {
-        if (eatKey(this.KEY_FIRE)) {  //Space bar navigatear í gegnum kerfið, next step fer í gegnum byrjunina og þegar að pointer kemur inn þá notum við act functionið
-            if(entityManager.step === 0) g_PokemonList[entityManager.id][9].play();
-            if(entityManager.step === 2) g_PokemonList[entityManager.i][9].play();
+        if (eatKey(this.KEY_FIRE)) {  //Space bar navigates through the combat
+            if(entityManager.step === 0) g_PokemonList[entityManager.id][9].play();//battlecry
+            if(entityManager.step === 2) g_PokemonList[entityManager.i][9].play();//battlecry
             entityManager.nextStep();
-	   		if(entityManager.step>=4) entityManager.act();
+	   		if(entityManager.step>=4) entityManager.act();//Battle starts and act() navigates
 
     }
 
@@ -44,7 +44,7 @@ Rattata.prototype.update = function (du) {
 
 Rattata.prototype.isDead = function(){
     if(this.health<=0){
-        entityManager.picachu[entityManager.i].experience+=50+this.level*10;
+        entityManager.picachu[entityManager.i].experience+=50+this.level*10; //gain exp when we win combats
         entityManager.battl=8;
         return;
     }
@@ -57,7 +57,7 @@ Rattata.prototype.render = function (ctx) {
     util.fillBox(ctx, g_canvas.width*0.1975 ,g_canvas.height*0.1375, 198, 10, "white");
     if(this.health > 0) util.fillBox(ctx, g_canvas.width*0.1975,g_canvas.height*0.1375, this.health/this.scale, 10, "black");    //Rattata healthbar
     }
-    g_sprites.rattata.drawAtSize(ctx,g_canvas.width*0.625,g_canvas.height*0.125,100,100);       //renderar rattata
+    g_sprites.rattata.drawAtSize(ctx,g_canvas.width*0.625,g_canvas.height*0.125,100,100);       //render rattata
 
     if(entityManager.battl==-1){   // battl=-1 þá erum við í battl move
      	g_sprites.pointer.drawAtSize(ctx,g_canvas.width*0.25,c[p],20,30); // draw pointer
@@ -65,9 +65,9 @@ Rattata.prototype.render = function (ctx) {
         util.fillBox(ctx, g_canvas.width*0.585 ,g_canvas.height*0.525, 200, 10, "white");
         util.fillBox(ctx, g_canvas.width*0.585,g_canvas.height*0.525,
         entityManager.picachu[entityManager.i].health/entityManager.picachu[entityManager.i].scale, 10, "black"); //Því picachu er ekki renderaður í þessum glugga þá þarf að teikna healthið hér
-        if(p===0) util.writeText(ctx,"Lightning attack",g_canvas.width*0.075,g_canvas.height*0.625, 2); // Það sem stendur í boxinu
-        if(p===1) util.writeText(ctx,"Physical attack",g_canvas.width*0.075,g_canvas.height*0.625, 2);
-        if(p===2) util.writeText(ctx,"Tail whip",g_canvas.width*0.075,g_canvas.height*0.625, 2);
+        if(p===0) util.writeText(ctx,"Attack move 1",g_canvas.width*0.075,g_canvas.height*0.625, 2); 
+        if(p===1) util.writeText(ctx,"Attack move 2",g_canvas.width*0.075,g_canvas.height*0.625, 2);
+        if(p===2) util.writeText(ctx,"Attack move 3",g_canvas.width*0.075,g_canvas.height*0.625, 2);
         if(p===3) util.writeText(ctx,"No Move",g_canvas.width*0.075,g_canvas.height*0.625, 2);
 
     }
